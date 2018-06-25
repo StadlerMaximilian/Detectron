@@ -59,3 +59,25 @@ def add_VGG_CNN_M_1024_roi_fc_head(model, blob_in, dim_in, spatial_scale):
     model.FC('fc6', 'fc7', 4096, 1024)
     blob_out = model.Relu('fc7', 'fc7')
     return blob_out, 1024
+
+
+def add_VGG_CNN_M_1024_generator_base(model, blob_in):
+    model.StopGradient('conv1', 'conv1') #stop gradient before reaching actual conv1 layer
+    model.Conv('conv1', 'conv1_gen', 96, 256, 3, pad=1, stride=2)
+    model.Relu('conv1_gen', 'conv1_gen')
+    model.Conv('conv1_gen', 'conv2_gen', 256, 512, 1, pad=0, stride=1)
+    model.Relu('conv2_gen', 'conv2_gen')
+    spatial_scale = 1. / 2.
+    blob_out = model.RoIFeatureTransform(
+        blob_in,
+        'pool5_gen',
+        blob_rois='rois',
+        method=cfg.FAST_RCNN.ROI_XFORM_METHOD,
+        resolution=6,
+        sampling_ratio=cfg.FAST_RCNN.ROI_XFORM_SAMPLING_RATIO,
+        spatial_scale=spatial_scale
+    )
+    return blob_out, 512
+
+
+
