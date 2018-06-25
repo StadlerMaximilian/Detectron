@@ -1,11 +1,9 @@
 import json
 from PIL import Image
 import datetime
-import pylab as pl
-import random
-import numpy as np
-import cv2
-import copy
+import argparse
+import sys
+import os
 
 """
 ms coco style
@@ -207,3 +205,42 @@ def create_coco_licence(id=0, name="", url=""):
         }
 
     return license
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='Convert a dataset to ms-coco-style format'
+    )
+    parser.add_argument(
+        '--datadir',
+        dest='datadir',
+        help='Include here the path to the root directory where your dataset is stored',
+        default=None,
+        type=str
+    )
+
+    parser.add_argument(
+        '--type',
+        dest='dataset_type',
+        help='Include here the type of your dataset you want to convert. At the moment, supported datasets are: tt100k',
+        default=None,
+        type=str
+    )
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    if args.dataset_type is None or args.dataset_type is None:
+        return
+    if args.dataset_type == 'tt100k':
+        create_json_annos_tt100k(args.datadir)
+    else:
+        return
+
+
+if __name__ == '__main__':
+    main()
