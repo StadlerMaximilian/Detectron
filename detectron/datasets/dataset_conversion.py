@@ -132,7 +132,7 @@ def create_json_annos_tt100k(datadir):
 
                 id = ann_id_counter
                 ann_id_counter += 1
-                category_id = types[category]
+                category_id = category_to_index(category, categories)
                 area = 0.0 #no segmentation support
                 segmentation = [[]] #no segmentation support
                 x = bbox['xmin'] #left corner
@@ -155,6 +155,14 @@ def create_json_annos_tt100k(datadir):
 
         with open(datadir + '/tt100k_' + set + '.json', 'w') as fp:
             json.dump(dataset, fp)
+
+
+def category_to_index(category, categories):
+    category_id = -1
+    for type in categories:
+        if type['name'] == category:
+            category_id = type['id']
+    return category_id
 
 
 def create_coco_category(id, type, supercategory):
