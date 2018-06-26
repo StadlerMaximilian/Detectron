@@ -186,17 +186,23 @@ _DATASETS = {
         _DEVKIT_DIR:
             _DATA_DIR + '/VOC2012/VOCdevkit2012'
     },
-    'tt100k_trainval':{
+    'tt100k_trainval':  {
         _IM_DIR:
             _DATA_DIR + '/tt100k/train',
         _ANN_FN:
             _DATA_DIR + '/tt100k/tt100k_train.json'
     },
-    'tt100k_test':{
+    'tt100k_test': {
         _IM_DIR:
             _DATA_DIR + '/tt100k/test',
         _ANN_FN:
             _DATA_DIR + '/tt100k/tt100k_test.json'
+    },
+    'tt100k_val_small': {
+        _IM_DIR:
+            _DATA_DIR + '/tt100k/other',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/tt100k_other.json'
     }
 }
 
