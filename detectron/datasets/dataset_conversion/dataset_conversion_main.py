@@ -1,10 +1,5 @@
-import json
-from pycocotools.coco import COCO
-from PIL import Image
-import datetime
 import argparse
 import sys
-import os
 
 from tt100k_conversion import CocoTt100kConversion
 from kitti_conversion import CocoKittiConversion
@@ -55,6 +50,13 @@ def parse_args():
         default=False
     )
 
+    parser.add_argument(
+        '--caltech_img_bool',
+        dest='caltech_img_bool',
+        help='Set bool to false for disabling the conversion of .seq video files if the converted images already exist',
+        default=False
+    )
+
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -65,30 +67,35 @@ def main():
     args = parse_args()
     im_dir = ""
     json_file = ""
+
     if args.dataset_type is None or args.dataset_type is None:
         return
     if args.dataset_type == 'tt100k':
         dataset = CocoTt100kConversion(args.data_dir)
         im_dir = args.data_dir + '/train'
-        json_file = args.data_dir + '/tt100k_train.json'
+        json_file = args.data_dir + '/JsonAnnotations/tt100k_train.json'
+
     elif args.dataset_type == 'caltech_pedestrian':
         dataset = CocoCaltechPedestrianConversion(args.data_dir)
         im_dir = args.data_dir + '/train'
-        json_file = args.data_dir + '/caltech_original_train.json'
+        json_file = args.data_dir + '/JsonAnnotations/caltech_original_train.json'
+
     elif args.dataset_type == 'kitti':
         dataset = CocoKittiConversion(args.data_dir)
-        im_dir = args.data_dir + '/train'
-        json_file = args.data_dir + '/kitti_train.json'
+        im_dir = args.data_dir + '/training/image_2'
+        json_file = args.data_dir + '/JsonAnnotations/kitti_train.json'
+
     elif args.dataset_type == 'vkitti':
         dataset = CocoVkittiConversion(args.data_dir)
-        im_dir = args.data_dir + '/train'
-        json_file = args.data_dir + '/vkitti_train.json'
+        im_dir = args.data_dir + '/Images'
+        json_file = args.data_dir + '/JsonAnnotations/vkitti_clone_train.json'
+
     else:
         raise ValueError("Specified type of dataset is not supported.")
 
-    dataset.create_json_annos()
+    dataset.create_json_annos(caltech_img_bool=args.caltech_img_bool)
 
-    if args.check_bool:
+    if args.check_bool and im_dir != "" and json_file != "":
         dataset.check_json_annos(args.plot_bool, im_dir, json_file)
     if args.overfit_bool:
         dataset.create_json_overfit()

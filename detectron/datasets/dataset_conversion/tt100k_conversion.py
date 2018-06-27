@@ -1,10 +1,7 @@
 import json
-from pycocotools.coco import COCO
 from PIL import Image
-import datetime
-import argparse
-import sys
 import os
+
 from conversion_base import CocoConversion
 
 
@@ -13,7 +10,7 @@ class CocoTt100kConversion(CocoConversion):
     requires datadir to be /path/to/tt100k/data
     """
 
-    def create_json_annos(self):
+    def create_json_annos(self, caltech_img_bool=False):
         """
            TT100K JSON STYLE
            { "imgs": imgs,
@@ -90,10 +87,10 @@ class CocoTt100kConversion(CocoConversion):
                     id = ann_id_counter
                     ann_id_counter += 1
                     category_id = self.category_to_index(category, self.categories)
-                    x = int(bbox_tt100k['xmin']) - 1 # left corner
-                    y = int(bbox_tt100k['ymin']) - 1  # top left corner
-                    width = int(bbox_tt100k['xmax']) - x + 1
-                    height = int(bbox_tt100k['ymax']) - y + 1
+                    x = bbox_tt100k['xmin'] # left corner
+                    y = bbox_tt100k['ymin'] # top left corner
+                    width = bbox_tt100k['xmax'] - x
+                    height = bbox_tt100k['ymax']- y
                     segmentation = [[x, y,
                                      x, y + height,
                                      x + width, y + height,
@@ -107,6 +104,6 @@ class CocoTt100kConversion(CocoConversion):
             print("..." + set + ": converted {} images".format(img_count))
 
             dataset_dict = self.create_coco_dataset_dict(images, annotations)
-            with open(self.data_dir + '/tt100k_' + set + '.json', 'w') as fp:
+            with open(self.anno_dir + '/tt100k_' + set + '.json', 'w') as fp:
                 json.dump(dataset_dict, fp)
-                self.annotation_files.append(self.data_dir + '/tt100k_' + set + '.json')
+                self.annotation_files.append(self.anno_dir + '/tt100k_' + set + '.json')

@@ -1,11 +1,7 @@
 from __future__ import print_function, division
 
 import json
-from pycocotools.coco import COCO
 from PIL import Image
-import datetime
-import argparse
-import sys
 import os
 import glob
 import cv2 as cv
@@ -23,9 +19,10 @@ class CocoCaltechPedestrianConversion(CocoConversion):
     requires datadir to be path to /path/to/caltech_pedestrian
     """
 
-    def create_json_annos(self):
+    def create_json_annos(self, caltech_img_bool=False):
         print("\n Converting images ...\n")
-        self.convert_seqs()
+        if not caltech_img_bool:
+            self.convert_seqs()
         self.create_json_annos_original()
         self.create_json_annos_new()
 
@@ -33,7 +30,6 @@ class CocoCaltechPedestrianConversion(CocoConversion):
         # create annotation for new annotations
         # located in annotations/anno_test_1xnew
         # located in annotations/anno_train_1xnew
-        # TODO do the same for new_annotations
         types = ["person", "ignore", "people"]
 
         img_id_counter = 0
@@ -62,10 +58,10 @@ class CocoCaltechPedestrianConversion(CocoConversion):
                     category = data_dict["category"]
                     category_id = self.category_to_index(category, self.categories)
 
-                    x = int(float(pos[0])) - 1
-                    y = int(float(pos[1])) - 1
-                    width = int(float(pos[2]))
-                    height = int(float(pos[3]))
+                    x = float(pos[0]) - 1
+                    y = float(pos[1]) - 1
+                    width = float(pos[2])
+                    height = float(pos[3])
                     segmentation = [[x, y,
                                      x, y + height,
                                      x + width, y + height,
@@ -79,13 +75,13 @@ class CocoCaltechPedestrianConversion(CocoConversion):
                                                 bbox, iscrowd, annotations)
                     ann_id_counter += 1
 
-                    if isinstance(posv, int):
+                    if isinstance(posv, int) or isinstance(posv, float):
                         posv = [0, 0, 0, 0]
 
-                    x = int(float(posv[0])) - 1
-                    y = int(float(posv[1])) - 1
-                    width = int(float(posv[2]))
-                    height = int(float(posv[3]))
+                    x = float(posv[0])
+                    y = float(posv[1])
+                    width = float(posv[2])
+                    height = float(posv[3])
                     segmentation = [[x, y,
                                      x, y + height,
                                      x + width, y + height,
@@ -105,12 +101,12 @@ class CocoCaltechPedestrianConversion(CocoConversion):
             print("...new " + mode + ": converted {} images".format(img_count))
             dataset_dict = self.create_coco_dataset_dict(images, annotations)
             dataset_dict_v = self.create_coco_dataset_dict(images_v, annotations_v)
-            with open(self.data_dir + '/caltech_new' + '_' + mode + '.json', 'w') as fp:
+            with open(self.anno_dir + '/caltech_new' + '_' + mode + '.json', 'w') as fp:
                 json.dump(dataset_dict, fp)
-                self.annotation_files.append(self.data_dir + '/caltech_new' + '_' + mode + '.json')
-            with open(self.data_dir + '/caltech_new' + '_' + mode + 'v.json', 'w') as fp:
+                self.annotation_files.append(self.anno_dir + '/caltech_new' + '_' + mode + '.json')
+            with open(self.anno_dir + '/caltech_new' + '_' + mode + 'v.json', 'w') as fp:
                 json.dump(dataset_dict_v, fp)
-                self.annotation_files.append(self.data_dir + '/caltech_new' + '_' + mode + 'v.json')
+                self.annotation_files.append(self.anno_dir + '/caltech_new' + '_' + mode + 'v.json')
 
     def create_json_annos_original(self):
         print("\n Converting annotations ...\n")
@@ -178,10 +174,10 @@ class CocoCaltechPedestrianConversion(CocoConversion):
                                 category = data_dict["category"]
                                 category_id = self.category_to_index(category, self.categories)
 
-                                x = int(pos[0]) - 1
-                                y = int(pos[1]) - 1
-                                width = int(pos[2])
-                                height = int(pos[3])
+                                x = pos[0]
+                                y = pos[1]
+                                width = pos[2]
+                                height = pos[3]
                                 segmentation = [[x, y,
                                                  x, y + height,
                                                  x + width, y + height,
@@ -198,10 +194,10 @@ class CocoCaltechPedestrianConversion(CocoConversion):
                                 if isinstance(posv, int):
                                     posv = [0, 0, 0, 0]
 
-                                x = int(posv[0]) - 1
-                                y = int(posv[1]) - 1
-                                width = int(posv[2])
-                                height = int(posv[3])
+                                x = posv[0]
+                                y = posv[1]
+                                width = posv[2]
+                                height = posv[3]
                                 segmentation = [[x, y,
                                                  x, y + height,
                                                  x + width, y + height,
@@ -222,12 +218,12 @@ class CocoCaltechPedestrianConversion(CocoConversion):
 
                 dataset_dict = self.create_coco_dataset_dict(images, annotations)
                 dataset_dict_v = self.create_coco_dataset_dict(images_v, annotations_v)
-                with open(self.data_dir + '/caltech_' + ann_type + '_' + mode + '.json', 'w') as fp:
+                with open(self.anno_dir + '/caltech_' + ann_type + '_' + mode + '.json', 'w') as fp:
                     json.dump(dataset_dict, fp)
-                    self.annotation_files.append(self.data_dir + '/caltech_' + ann_type + '_' + mode + '.json')
-                with open(self.data_dir + '/caltech_' + ann_type + '_' + mode + 'v.json', 'w') as fp:
+                    self.annotation_files.append(self.anno_dir + '/caltech_' + ann_type + '_' + mode + '.json')
+                with open(self.anno_dir + '/caltech_' + ann_type + '_' + mode + 'v.json', 'w') as fp:
                     json.dump(dataset_dict_v, fp)
-                    self.annotation_files.append(self.data_dir + '/caltech_' + ann_type + '_' + mode + 'v.json')
+                    self.annotation_files.append(self.anno_dir + '/caltech_' + ann_type + '_' + mode + 'v.json')
 
     @staticmethod
     def save_img(out_dir, dname, fn, i, frame):

@@ -1,13 +1,8 @@
-import json
 from pycocotools.coco import COCO
-from PIL import Image
 import datetime
-import argparse
-import sys
 import os
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import random
 import numpy as np
 
 plt.rcParams['figure.figsize'] = (10.0, 8.0) # set default size of plots
@@ -80,6 +75,9 @@ class CocoConversion(object):
         self.licenses = []
         self.categories = []
         self.annotation_files = []
+        if not os.path.exists(data_dir + "/JsonAnnotations"):
+            os.makedirs(data_dir + "/JsonAnnotations")
+        self.anno_dir = data_dir + "/JsonAnnotations"
 
     @staticmethod
     def category_to_index(category, categories):
@@ -96,8 +94,11 @@ class CocoConversion(object):
                     "supercategory": supercategory}
         return category
 
-    def append_coco_category(self, id, type, supercategory):
-        self.categories.append(self.create_coco_category(id, type, supercategory))
+    def append_coco_category(self, id, type, supercategory, categories=None):
+        if categories is None:
+            self.categories.append(self.create_coco_category(id, type, supercategory))
+        else:
+            categories.append(self.create_coco_category(id, type, supercategory))
 
     @staticmethod
     def create_coco_image(file_name, height, width, id):
@@ -151,18 +152,27 @@ class CocoConversion(object):
     def append_coco_license(self, id=0, name="", url=""):
         self.licenses.append(self.create_coco_license(id, name, url))
 
-    def create_coco_dataset_dict(self, images, annotations):
-        dataset_dict = {"info": self.info,
-                        "images": images,
-                        "annotations": annotations,
-                        "type": "instances",
-                        "licenses": self.licenses,
-                        "categories": self.categories
-                        }
+    def create_coco_dataset_dict(self, images, annotations, categories=None):
+        if categories is None:
+            dataset_dict = {"info": self.info,
+                            "images": images,
+                            "annotations": annotations,
+                            "type": "instances",
+                            "licenses": self.licenses,
+                            "categories": self.categories
+                            }
+        else:
+            dataset_dict = {"info": self.info,
+                            "images": images,
+                            "annotations": annotations,
+                            "type": "instances",
+                            "licenses": self.licenses,
+                            "categories": categories
+                            }
 
         return dataset_dict
 
-    def create_json_annos(self):
+    def create_json_annos(self, caltech_img_bool=False):
         """
         overriden in subclass
         subclass must implement this function
@@ -220,6 +230,7 @@ class CocoConversion(object):
         print("conversion completed")
 
         if plot_bool:
+            print("\nploting samples of training set... ")
             coco = COCO(json_file)
             imgs = coco.loadImgs(coco.getImgIds())
             img_ids = [img['id'] for img in imgs]
