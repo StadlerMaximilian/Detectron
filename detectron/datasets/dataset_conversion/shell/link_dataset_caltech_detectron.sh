@@ -26,7 +26,7 @@ done
 if [ -d "${dataset_path}/caltech_pedestrian" ]; then
     echo "Linking caltech_pedestrian dataset....";
     
-    if [ ! -d ${detectron_path}/detectron/datasets/data/caltech_pedestrian]; then
+    if [ ! -d ${detectron_path}/detectron/datasets/data/caltech_pedestrian ]; then
         mkdir -p ${detectron_path}/detectron/datasets/data/caltech_pedestrian;
     fi
     

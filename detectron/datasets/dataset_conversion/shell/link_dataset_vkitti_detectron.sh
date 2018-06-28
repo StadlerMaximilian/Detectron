@@ -25,7 +25,7 @@ done
 
 if [ -d "${dataset_path}/vkitti" ]; then
     echo "Linking vkitti dataset....";
-    if [ ! -d ${detectron_path}/detectron/datasets/data/vkitti]; then
+    if [ ! -d ${detectron_path}/detectron/datasets/data/vkitti ]; then
         mkdir -p ${detectron_path}/detectron/datasets/data/vkitti;
     fi
     

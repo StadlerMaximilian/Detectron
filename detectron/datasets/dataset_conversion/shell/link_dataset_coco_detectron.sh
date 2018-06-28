@@ -26,7 +26,7 @@ done
 if [ -d "${dataset_path}/coco" ]; then
     echo "Linking coco dataset....";
     
-    if [ ! -d ${detectron_path}/detectron/datasets/data/coco]; then
+    if [ ! -d ${detectron_path}/detectron/datasets/data/coco ]; then
         mkdir -p ${detectron_path}/detectron/datasets/data/coco;
     fi
     
