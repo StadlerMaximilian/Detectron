@@ -44,17 +44,10 @@ def parse_args():
     )
 
     parser.add_argument(
-        '--overfit_sample',
-        dest='overfit_bool',
-        help='Set bool to false for disabling the creation of an overfitting annotation file',
-        default=False
-    )
-
-    parser.add_argument(
         '--caltech_img_bool',
         dest='caltech_img_bool',
         help='Set bool to false for disabling the conversion of .seq video files if the converted images already exist',
-        default=False
+        default=True
     )
 
     if len(sys.argv) == 1:
@@ -97,8 +90,6 @@ def main():
 
     if args.check_bool and im_dir != "" and json_file != "":
         dataset.check_json_annos(args.plot_bool, im_dir, json_file)
-    if args.overfit_bool:
-        dataset.create_json_overfit()
 
 
 if __name__ == '__main__':

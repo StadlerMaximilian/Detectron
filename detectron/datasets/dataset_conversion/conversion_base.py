@@ -245,7 +245,5 @@ class CocoConversion(object):
                 coco.showAnns(anns)
                 plt.show()
 
-    def create_json_overfit(self):
-        pass
 
 

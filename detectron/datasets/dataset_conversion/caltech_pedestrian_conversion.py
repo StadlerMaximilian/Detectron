@@ -19,9 +19,9 @@ class CocoCaltechPedestrianConversion(CocoConversion):
     requires datadir to be path to /path/to/caltech_pedestrian
     """
 
-    def create_json_annos(self, caltech_img_bool=False):
+    def create_json_annos(self, caltech_img_bool=True):
         print("\n Converting images ...\n")
-        if not caltech_img_bool:
+        if caltech_img_bool: # converts if not explicitly set to False
             self.convert_seqs()
         self.create_json_annos_original()
         self.create_json_annos_new()

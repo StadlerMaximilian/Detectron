@@ -206,13 +206,13 @@ _DATASETS = {
     },
     'kitti_trainval': {
         _IM_DIR:
-            _DATA_DIR + '/kitti/train',
+            _DATA_DIR + '/kitti/training/image_2',
         _ANN_FN:
             _DATA_DIR + '/tt100k/annotations/kitti_train.json'
     },
     'kitti_test': {
         _IM_DIR:
-            _DATA_DIR + '/kitti/test',
+            _DATA_DIR + '/kitti/training/image_2',
         _ANN_FN:
             _DATA_DIR + '/kitti/annotations/kitti_test.json'
     },
