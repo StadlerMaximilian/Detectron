@@ -202,8 +202,165 @@ _DATASETS = {
         _IM_DIR:
             _DATA_DIR + '/tt100k/other',
         _ANN_FN:
-            _DATA_DIR + '/tt100k/tt100k_other.json'
+            _DATA_DIR + '/tt100k/annotations/tt100k_other.json'
+    },
+    'kitti_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/kitti/train',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/kitti_train.json'
+    },
+    'kitti_test': {
+        _IM_DIR:
+            _DATA_DIR + '/kitti/test',
+        _ANN_FN:
+            _DATA_DIR + '/kitti/annotations/kitti_test.json'
+    },
+    'vkitti_clone_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_clone_train.json'
+    },
+    'vkitti_clone_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_clone_test.json'
+    },
+    'vkitti_clone_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_clone_all.json'
+    },
+    'vkitti_rain_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_rain_train.json'
+    },
+    'vkitti_rain_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_rain_test.json'
+    },
+    'vkitti_rain_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_rain_all.json'
+    },
+    'vkitti_morning_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_morning_train.json'
+    },
+    'vkitti_morning_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_morning_test.json'
+    },
+    'vkitti_morning_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_morning_all.json'
+    },
+    'vkitti_fog_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_fog_train.json'
+    },
+    'vkitti_fog_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_fog_test.json'
+    },
+    'vkitti_fog_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_fog_all.json'
+    },
+    'vkitti_overcast_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_overcast_train.json'
+    },
+    'vkitti_overcast_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_overcast_test.json'
+    },
+    'vkitti_overcast_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_overcast_all.json'
+    },
+    'vkitti_sunset_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_sunset_train.json'
+    },
+    'vkitti_sunset_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_sunset_test.json'
+    },
+    'vkitti_sunset_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_sunset_all.json'
+    },
+    'caltech_original_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/caltech_pedestrian/train',
+        _ANN_FN:
+            _DATA_DIR + '/caltech_pedestrian/annotations/caltech_original_train.json'
+    },
+    'caltech_original_test': {
+        _IM_DIR:
+            _DATA_DIR + '/caltech_pedestrian/test',
+        _ANN_FN:
+            _DATA_DIR + '/caltech_pedestrian/annotations/caltech_original_test.json'
+    },
+    'caltech_dense_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/caltech_pedestrian/train',
+        _ANN_FN:
+            _DATA_DIR + '/caltech_pedestrian/annotations/caltech_dense_train.json'
+    },
+    'caltech_dense_test': {
+        _IM_DIR:
+            _DATA_DIR + '/caltech_pedestrian/test',
+        _ANN_FN:
+            _DATA_DIR + '/caltech_pedestrian/annotations/caltech_dense_test.json'
+    },
+    'caltech_new_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/caltech_pedestrian/train',
+        _ANN_FN:
+            _DATA_DIR + '/caltech_pedestrian/annotations/caltech_new_train.json'
+    },
+    'caltech_new_test': {
+        _IM_DIR:
+            _DATA_DIR + '/caltech_pedestrian/test',
+        _ANN_FN:
+            _DATA_DIR + '/caltech_pedestrian/annotations/caltech_new_test.json'
     }
+
 }
 
 
