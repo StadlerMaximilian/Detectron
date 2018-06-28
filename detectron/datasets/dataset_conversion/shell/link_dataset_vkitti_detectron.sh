@@ -29,7 +29,7 @@ if [ -d "${dataset_path}/vkitti" ]; then
         mkdir -p ${detectron_path}/detectron/datasets/data/vkitti;
     fi
     
-    ln -s ${dataset_path}/vkitti/Images ${detectron_path}/detectron/datasets/data/kitti/Images;
+    ln -s ${dataset_path}/vkitti/Images ${detectron_path}/detectron/datasets/data/vkitti/Images;
     ln -s ${dataset_path}/vkitti/JsonAnnotations ${detectron_path}/detectron/datasets/data/vkitti/annotations;
 fi
 

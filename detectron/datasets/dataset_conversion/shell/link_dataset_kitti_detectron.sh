@@ -25,8 +25,8 @@ done
 
 if [ -d ${dataset_path}/kitti ]; then
     echo "Linking kitti dataset....";
-    if [ ! -d ${detect_path}/detectron/datasets/data/kitti ]; then
-        mkdir -p ${detect_path}/detectron/datasets/data/kitti;
+    if [ ! -d ${detectron_path}/detectron/datasets/data/kitti ]; then
+        mkdir -p ${detectron_path}/detectron/datasets/data/kitti;
     fi
     
     ln -s ${dataset_path}/kitti/testing ${detectron_path}/detectron/datasets/data/kitti/testing;
