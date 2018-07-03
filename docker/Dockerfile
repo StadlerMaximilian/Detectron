@@ -25,10 +25,10 @@ ENV LD_LIBRARY_PATH /usr/local/caffe2_build/lib:${LD_LIBRARY_PATH}
 
 # Clone the Detectron repository
 # use own version of detectrion
-RUN git clone https://github.com/StadlerMaximilian/Detectron /detectron
+RUN git clone https://github.com/StadlerMaximilian/Detectron /detectron_docker
 
 # Install Python dependencies
-RUN pip install -r /detectron/requirements.txt
+RUN pip install -r /detectron_docker/requirements.txt
 
 # Install the COCO API
 RUN git clone https://github.com/cocodataset/cocoapi.git /cocoapi
@@ -36,7 +36,7 @@ WORKDIR /cocoapi/PythonAPI
 RUN make install
 
 # Go to Detectron root
-WORKDIR /detectron
+WORKDIR /detectron_docker
 
 # Set up Python modules
 RUN make
