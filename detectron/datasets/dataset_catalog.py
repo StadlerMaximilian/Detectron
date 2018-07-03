@@ -190,13 +190,13 @@ _DATASETS = {
         _IM_DIR:
             _DATA_DIR + '/tt100k/train',
         _ANN_FN:
-            _DATA_DIR + '/tt100k/tt100k_train.json'
+            _DATA_DIR + '/tt100k/annotations/tt100k_train.json'
     },
     'tt100k_test': {
         _IM_DIR:
             _DATA_DIR + '/tt100k/test',
         _ANN_FN:
-            _DATA_DIR + '/tt100k/tt100k_test.json'
+            _DATA_DIR + '/tt100k/annotations/tt100k_test.json'
     },
     'tt100k_val_small': {
         _IM_DIR:
