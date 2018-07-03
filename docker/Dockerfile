@@ -25,6 +25,7 @@ ENV LD_LIBRARY_PATH /usr/local/caffe2_build/lib:${LD_LIBRARY_PATH}
 
 # Clone the Detectron repository
 # use own version of detectrion
+RUN git clone https://github.com/StadlerMaximilian/dataset_setup.git ./test
 RUN git clone https://github.com/StadlerMaximilian/Detectron /detectron_docker
 
 # Install Python dependencies
