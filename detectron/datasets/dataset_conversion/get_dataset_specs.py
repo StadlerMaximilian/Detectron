@@ -16,6 +16,14 @@ def parse_args():
         default=""
     )
 
+    parser.add_argument(
+        '--type',
+        dest='data_type',
+        type=str,
+        help='Include here the type of your dataset.',
+        default=""
+    )
+
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -23,7 +31,10 @@ def parse_args():
 
 def main():
     args = parse_args()
-    annotation_files = glob.glob(args.ann_dir + '/*.json')
+    if args.data_type == "coco":
+        annotation_files = glob.glob(args.ann_dir + '/instances*.json')
+    else:
+        annotation_files = glob.glob(args.ann_dir + '/*.json')
 
     for file in annotation_files:
         coco = COCO(file)
