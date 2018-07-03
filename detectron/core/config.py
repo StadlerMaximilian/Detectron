@@ -940,7 +940,7 @@ __C.EPS = 1e-14
 __C.ROOT_DIR = os.getcwd()
 
 # Output basedir
-__C.OUTPUT_DIR = b'/tmp'
+__C.OUTPUT_DIR = b'/home/max/Detectron_output'
 
 # Name (or path to) the matlab executable
 __C.MATLAB = b'matlab'
@@ -971,7 +971,7 @@ __C.EXPECTED_RESULTS_EMAIL = b''
 
 # Models and proposals referred to by URL are downloaded to a local cache
 # specified by DOWNLOAD_CACHE
-__C.DOWNLOAD_CACHE = b'/tmp/detectron-download-cache'
+__C.DOWNLOAD_CACHE = b'/home/max/Detectron_output/detectron-download-cache'
 
 
 # ---------------------------------------------------------------------------- #
