@@ -163,6 +163,7 @@ def evaluate_tt100k_boxes(
     else:
         print("no evaluation with force_test is {}".format(cfg.CUSTOM_DATA.FORCE_TEST))
         coco_eval = None
+        new_classes = None
     # Optionally cleanup results json file
     if cleanup:
         os.remove(res_file)
@@ -233,21 +234,22 @@ def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
     type45 = "i2,i4,i5,il100,il60,il80,io,ip,p10,p11,p12,p19,p23,p26,p27,p3,p5,p6,pg,ph4,ph4.5,ph5,pl100," \
              "pl120,pl20,pl30,pl40,pl5,pl50,pl60,pl70,pl80,pm20,pm30,pm55,pn,pne,po,pr40,w13,w32,w55,w57,w59,wo"
     type45 = type45.split(',')
-    type45 = ['i2'] # for debugging
+
     # create new params for evaluation
     type45_params = Params(iouType='bbox')
     type45_params.imgIds = sorted(json_dataset.COCO.getImgIds())
     type45_params.catIds = sorted(json_dataset.COCO.getCatIds(catNms=type45))
+    new_classes = ['__background__'] + type45
 
     coco_eval.accumulate(p=type45_params)
-
-    _log_detection_eval_metrics(json_dataset, coco_eval)
+    _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=new_classes)
     eval_file = os.path.join(output_dir, 'detection_results.pkl')
     save_object(coco_eval, eval_file)
     logger.info('Wrote json eval results to: {}'.format(eval_file))
     return coco_eval
 
-def _log_detection_eval_metrics(json_dataset, coco_eval):
+
+def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
     def _get_thr_ind(coco_eval, thr):
         ind = np.where((coco_eval.params.iouThrs > thr - 1e-5) &
                        (coco_eval.params.iouThrs < thr + 1e-5))[0][0]
@@ -268,14 +270,24 @@ def _log_detection_eval_metrics(json_dataset, coco_eval):
         '~~~~ Mean and per-category AP @ IoU=[{:.2f},{:.2f}] ~~~~'.format(
             IoU_lo_thresh, IoU_hi_thresh))
     logger.info('{:.1f}'.format(100 * ap_default))
-    for cls_ind, cls in enumerate(json_dataset.classes):
-        if cls == '__background__':
-            continue
-        # minus 1 because of __background__
-        precision = coco_eval.eval['precision'][
-            ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
-        ap = np.mean(precision[precision > -1])
-        logger.info('{:.1f}'.format(100 * ap))
+    if new_classes is None:
+        for cls_ind, cls in enumerate(json_dataset.classes):
+            if cls == '__background__':
+                continue
+            # minus 1 because of __background__
+            precision = coco_eval.eval['precision'][
+                ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
+            ap = np.mean(precision[precision > -1])
+            logger.info('{:.1f}'.format(100 * ap))
+    else:
+        for cls_ind, cls in enumerate(new_classes):
+            if cls == '__background__':
+                continue
+            # minus 1 because of __background__
+            precision = coco_eval.eval['precision'][
+                ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
+            ap = np.mean(precision[precision > -1])
+            logger.info('{:.1f}'.format(100 * ap))
     logger.info('~~~~ Summary metrics ~~~~')
     coco_eval.summarize()
 
