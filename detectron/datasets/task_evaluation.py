@@ -93,6 +93,11 @@ def evaluate_boxes(dataset, all_boxes, output_dir, use_matlab=False):
             dataset, all_boxes, output_dir, use_matlab=use_matlab
         )
         box_results = _voc_eval_to_box_results(voc_eval)
+    elif _use_tt100k_evaluator(dataset):
+        tt100k_eval = json_dataset_evaluator.evaluate_tt100k_boxes(
+            dataset, all_boxes, output_dir, use_salt=not_comp, cleanup=not_comp
+        )
+        box_results = _coco_eval_to_box_results(tt100k_eval)
     else:
         raise NotImplementedError(
             'No evaluator for dataset: {}'.format(dataset.name)
@@ -257,6 +262,10 @@ def _use_voc_evaluator(dataset):
     """Check if the dataset uses the PASCAL VOC dataset evaluator."""
     return dataset.name[:4] == 'voc_'
 
+
+def _use_tt100k_evaluator(dataset):
+    """ Check if the dataset uses the TT100k dataset evaluator."""
+    return dataset.name.find('tt100k') > -1
 
 # Indices in the stats array for COCO boxes and masks
 COCO_AP = 0

@@ -27,6 +27,7 @@ import os
 import uuid
 
 from pycocotools.cocoeval import COCOeval
+from pycocotools.cocoeval import Params
 
 from detectron.core.config import cfg
 from detectron.utils.io import save_object
@@ -145,6 +146,28 @@ def evaluate_boxes(
         os.remove(res_file)
     return coco_eval
 
+def evaluate_tt100k_boxes(
+    json_dataset, all_boxes, output_dir, use_salt=True, cleanup=False
+):
+    res_file = os.path.join(
+        output_dir, 'bbox_' + json_dataset.name + '_results'
+    )
+    if use_salt:
+        res_file += '_{}'.format(str(uuid.uuid4()))
+    res_file += '.json'
+    _write_coco_bbox_results_file(json_dataset, all_boxes, res_file)
+    # Only do evaluation on non-test sets (annotations are undisclosed on test)
+    # for custom_data sets: evaluate also on test sets if forced
+    if json_dataset.name.find('test') == -1 or cfg.CUSTOM_DATA.FORCE_TEST is True:
+        coco_eval = _do_detection_tt100k_eval(json_dataset, res_file, output_dir)
+    else:
+        print("no evaluation with force_test is {}".format(cfg.CUSTOM_DATA.FORCE_TEST))
+        coco_eval = None
+    # Optionally cleanup results json file
+    if cleanup:
+        os.remove(res_file)
+    return coco_eval
+
 
 def _write_coco_bbox_results_file(json_dataset, all_boxes, res_file):
     # [{"image_id": 42,
@@ -201,6 +224,28 @@ def _do_detection_eval(json_dataset, res_file, output_dir):
     logger.info('Wrote json eval results to: {}'.format(eval_file))
     return coco_eval
 
+def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
+    coco_dt = json_dataset.COCO.loadRes(str(res_file))
+    coco_eval = COCOeval(json_dataset.COCO, coco_dt, 'bbox')
+    coco_eval.evaluate()
+
+    # use 45 categories with more than 100 instances for evaluation
+    type45 = "i2,i4,i5,il100,il60,il80,io,ip,p10,p11,p12,p19,p23,p26,p27,p3,p5,p6,pg,ph4,ph4.5,ph5,pl100," \
+             "pl120,pl20,pl30,pl40,pl5,pl50,pl60,pl70,pl80,pm20,pm30,pm55,pn,pne,po,pr40,w13,w32,w55,w57,w59,wo"
+    type45 = type45.split(',')
+    type45 = ['i2'] # for debugging
+    # create new params for evaluation
+    type45_params = Params(iouType='bbox')
+    type45_params.imgIds = sorted(json_dataset.COCO.getImgIds())
+    type45_params.catIds = sorted(json_dataset.COCO.getCatIds(catNms=type45))
+
+    coco_eval.accumulate(p=type45_params)
+
+    _log_detection_eval_metrics(json_dataset, coco_eval)
+    eval_file = os.path.join(output_dir, 'detection_results.pkl')
+    save_object(coco_eval, eval_file)
+    logger.info('Wrote json eval results to: {}'.format(eval_file))
+    return coco_eval
 
 def _log_detection_eval_metrics(json_dataset, coco_eval):
     def _get_thr_ind(coco_eval, thr):
