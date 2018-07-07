@@ -973,6 +973,13 @@ __C.EXPECTED_RESULTS_EMAIL = b''
 # specified by DOWNLOAD_CACHE
 __C.DOWNLOAD_CACHE = b'/home/max/Detectron_output/detectron-download-cache'
 
+# ---------------------------------------------------------------------------- #
+# Cluster options
+# ---------------------------------------------------------------------------- #
+
+__C.CUSTOM_DATA = AttrDict()
+# flag to force testing also on test set of custom datasets
+__C.CUSTOM_DATA.FORCE_TEST = False
 
 # ---------------------------------------------------------------------------- #
 # Cluster options
