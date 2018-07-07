@@ -271,24 +271,26 @@ def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
             IoU_lo_thresh, IoU_hi_thresh))
     logger.info('{:.1f}'.format(100 * ap_default))
     if new_classes is None:
-        for cls_ind, cls in enumerate(json_dataset.classes):
-            if cls == '__background__':
-                continue
-            # minus 1 because of __background__
-            precision = coco_eval.eval['precision'][
-                ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
-            ap = np.mean(precision[precision > -1])
-            logger.info('{:.1f}'.format(100 * ap))
+        classes = json_dataset.classes
     else:
-        for cls_ind, cls in enumerate(new_classes):
-            if cls == '__background__':
-                continue
-            # minus 1 because of __background__
-            precision = coco_eval.eval['precision'][
-                ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
-            ap = np.mean(precision[precision > -1])
-            logger.info('{:.1f}'.format(100 * ap))
-    logger.info('~~~~ Summary metrics ~~~~')
+        classes = new_classes
+
+    for cls_ind, cls in enumerate(classes):
+        if cls == '__background__':
+            continue
+        # dimension of precision: [TxRxKxAxM]
+        # minus 1 because of __background__
+        precision = coco_eval.eval['precision'][
+            ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
+        ap = np.mean(precision[precision > -1])
+
+        # dimension of recall: [TxKxAxM]
+        recall = coco_eval.eval['recall'][
+            ind_lo:(ind_hi + 1), cls_ind - 1, 0, 2]
+        ar = np.mean(recall[recall > -1])
+
+        logger.info('{}: AP {:.1f}, R'.format(cls, 100 * ap, 100 * ar))
+
     coco_eval.summarize()
 
 
