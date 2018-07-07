@@ -135,9 +135,10 @@ def evaluate_boxes(
     _write_coco_bbox_results_file(json_dataset, all_boxes, res_file)
     # Only do evaluation on non-test sets (annotations are undisclosed on test)
     # for custom_data sets: evaluate also on test sets if forced
-    if json_dataset.name.find('test') == -1 or cfg.CUSTOM_DATA.FORCE_TEST:
+    if json_dataset.name.find('test') == -1 or cfg.CUSTOM_DATA.FORCE_TEST is True:
         coco_eval = _do_detection_eval(json_dataset, res_file, output_dir)
     else:
+        print("no evaluation with force_test is {}".format(cfg.CUSTOM_DATA.FORCE_TEST))
         coco_eval = None
     # Optionally cleanup results json file
     if cleanup:
