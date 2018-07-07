@@ -89,7 +89,10 @@ def do_reval(dataset_name, output_dir, args):
         dets = pickle.load(f)
     # Override config with the one saved in the detections file
     if args.cfg_file is not None:
-        core_config.merge_cfg_from_cfg(core_config.load_cfg(dets['cfg']))
+        # bug: loads only already stored cfg
+        # core_config.merge_cfg_from_cfg(core_config.load_cfg(dets['cfg']))
+        # merge config from passed config file!!
+        core_config.merge_cfg_from_cfg(args.cfg_file)
     else:
         core_config._merge_a_into_b(core_config.load_cfg(dets['cfg']), cfg)
     results = task_evaluation.evaluate_all(
