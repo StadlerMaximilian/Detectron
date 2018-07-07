@@ -266,18 +266,20 @@ def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
     # max dets index 2: 100 per image
     precision = coco_eval.eval['precision'][ind_lo:(ind_hi + 1), :, :, 0, 2]
     ap_default = np.mean(precision[precision > -1])
-    recall = coco_eval.eval['precision'][ind_lo:(ind_hi + 1), :, 0, 2]
+    recall = coco_eval.eval['recall'][ind_lo:(ind_hi + 1), :, 0, 2]
     ar_default = np.mean(recall[recall > -1])
     logger.info(
         '~~~~ Mean and per-category AP @ IoU=[{:.2f},{:.2f}] ~~~~'.format(
             IoU_lo_thresh, IoU_hi_thresh))
     logger.info('mean: AP: {:.1f}, AR:{:.1f}'.format(100 * ap_default, 100 * ar_default))
+
     if new_classes is None:
         classes = json_dataset.classes
     else:
         classes = new_classes
 
     for cls_ind, cls in enumerate(classes):
+        # skip background and not evaluated classes
         if cls == '__background__':
             continue
         # dimension of precision: [TxRxKxAxM]
