@@ -279,7 +279,7 @@ COCO_AR_10 = 7
 COCO_AR_100 = 8
 COCO_ARS_100 = 9
 COCO_ARM_100 = 10
-COCO_ARL_100 = 111
+COCO_ARL_100 = 11
 # Slight difference for keypoints
 COCO_KPS_APM = 3
 COCO_KPS_APL = 4
