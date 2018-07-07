@@ -271,7 +271,7 @@ def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
     logger.info(
         '~~~~ Mean and per-category AP @ IoU=[{:.2f},{:.2f}] ~~~~'.format(
             IoU_lo_thresh, IoU_hi_thresh))
-    logger.info('mean: AP: {:.1f}, AR:{:.1f}'.format(100 * ap_default, 100 * ar_default))
+    logger.info('mean: AP: {:.1f}, AR: {:.1f}'.format(100 * ap_default, 100 * ar_default))
 
     if new_classes is None:
         classes = json_dataset.classes
@@ -293,7 +293,7 @@ def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
             ind_lo:(ind_hi + 1), cls_ind - 1, 0, 2]
         ar = np.mean(recall[recall > -1])
 
-        logger.info('{}: AP {:.1f}, {:.1f}'.format(cls, 100 * ap, 100 * ar))
+        logger.info('{}: AP: {:.1f}, AR: {:.1f}'.format(cls, 100 * ap, 100 * ar))
 
     coco_eval.summarize()
 

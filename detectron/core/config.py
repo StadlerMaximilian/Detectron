@@ -974,7 +974,7 @@ __C.EXPECTED_RESULTS_EMAIL = b''
 __C.DOWNLOAD_CACHE = b'/home/max/Detectron_output/detectron-download-cache'
 
 # ---------------------------------------------------------------------------- #
-# CUSTOM DATA options
+# CUSTOM DATAoptions
 # ---------------------------------------------------------------------------- #
 
 __C.CUSTOM_DATA = AttrDict()
