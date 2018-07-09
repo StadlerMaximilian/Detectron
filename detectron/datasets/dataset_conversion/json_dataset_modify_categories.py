@@ -48,7 +48,7 @@ def main():
     if not os.path.exists(args.json_file):
         raise ValueError("FILE {} does not exist!!!".format(args.json_file))
     json_file = json.loads(open(args.json_file).read())
-    json_file_name = os.path.split(args.json_file)[-1].split('.')[0]
+    json_file_name = args.json_file.split('.')[0]
 
     categories = json_file['categories']
     cat_names = [x['name'] for x in categories]
@@ -83,7 +83,7 @@ def main():
                         "categories": new_categories
                         }
 
-    with open(json_file_name + 'ignore.json', 'w') as fp:
+    with open(json_file_name + '_ignore.json', 'w') as fp:
         json.dump(new_dataset_dict, fp)
 
 
