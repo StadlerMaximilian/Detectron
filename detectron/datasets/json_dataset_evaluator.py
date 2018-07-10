@@ -163,7 +163,6 @@ def evaluate_tt100k_boxes(
     else:
         print("no evaluation with force_test is {}".format(cfg.CUSTOM_DATA.FORCE_TEST))
         coco_eval = None
-        new_classes = None
     # Optionally cleanup results json file
     if cleanup:
         os.remove(res_file)
@@ -277,12 +276,10 @@ def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
             IoU_lo_thresh, IoU_hi_thresh))
     logger.info('mean: AP: {:.1f}, AR: {:.1f}'.format(100 * ap_default, 100 * ar_default))
 
-    if new_classes is None:
-        classes = json_dataset.classes
-    else:
-        classes = new_classes
+    for cls_ind, cls in enumerate(json_dataset.classes):
+        if new_classes is not None and cls not in new_classes:
+            continue
 
-    for cls_ind, cls in enumerate(classes):
         # skip background and not evaluated classes
         if cls == '__background__':
             continue
