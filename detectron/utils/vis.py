@@ -296,16 +296,16 @@ def vis_one_image(
                               bbox[2] - bbox[0],
                               bbox[3] - bbox[1],
                               fill=False, edgecolor='g',
-                              linewidth=2, alpha=box_alpha))
+                              linewidth=1, alpha=box_alpha))
 
             if show_class:
                 ax.text(
                     bbox[0], bbox[1] - 2,
                     get_class_string(gt_classes[i], 1.0, dataset),
-                    fontsize=8,
+                    fontsize=4,
                     family='serif',
                     bbox=dict(
-                        facecolor='g', alpha=0.4, pad=2, edgecolor='none'),
+                        facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
                     color='white')
 
     # Display in largest to smallest order to reduce occlusion
@@ -328,16 +328,16 @@ def vis_one_image(
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
                           fill=False, edgecolor='b',
-                          linewidth=2, alpha=box_alpha))
+                          linewidth=1, alpha=box_alpha))
 
         if show_class:
             ax.text(
                 bbox[0], bbox[1] - 2,
                 get_class_string(classes[i], score, dataset),
-                fontsize=8, # changed fontsize from 3 to 8
+                fontsize=4, # changed fontsize from 3 to 8
                 family='serif',
                 bbox=dict(
-                    facecolor='b', alpha=0.4, pad=2, edgecolor='none'),
+                    facecolor='b', alpha=0.4, pad=0, edgecolor='none'),
                 color='white')
 
         # show mask
