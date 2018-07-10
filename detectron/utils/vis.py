@@ -301,7 +301,7 @@ def vis_one_image(
             if show_class:
                 ax.text(
                     bbox[0], bbox[1] - 2,
-                    get_class_string(gt_classes[i], dataset),
+                    get_class_string(gt_classes[i], 1.0, dataset),
                     fontsize=8,
                     family='serif',
                     bbox=dict(
