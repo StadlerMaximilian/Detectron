@@ -82,7 +82,7 @@ def parse_args():
 
 def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
     ds = JsonDataset(dataset)
-    roidb = ds.get_roidb()
+    roidb = ds.get_roidb(gt=True) # include ground-truth bboxes
 
     with open(detections_pkl, 'r') as f:
         dets = pickle.load(f)
@@ -129,7 +129,8 @@ def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
             thresh=thresh,
             box_alpha=0.8,
             dataset=ds,
-            show_class=True
+            show_class=True,
+            gt_entry=entry
         )
 
 
