@@ -244,7 +244,7 @@ def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
     type45_params.catIds = sorted(json_dataset.COCO.getCatIds(catNms=type45))
     new_classes = ['__background__'] + type45
 
-    coco_eval.accumulate(p=type45_params)
+    coco_eval.accumulate()
     _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=new_classes)
     eval_file = os.path.join(output_dir, 'detection_results.pkl')
     save_object(coco_eval, eval_file)
