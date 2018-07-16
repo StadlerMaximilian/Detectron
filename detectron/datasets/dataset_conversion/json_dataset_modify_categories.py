@@ -87,7 +87,7 @@ def main():
     if args.remove_txt != "":
         if not os.path.exists(args.remove_txt):
             raise ValueError("FILE {} does not exist!!!".format(args.remove_txt))
-        with args.remove_txt as file:
+        with open(args.remove_txt) as file:
             for line in file:
                 remove_cats = line.split(',')
                 break # only read first line
@@ -96,7 +96,7 @@ def main():
     elif args.keep_txt != "":
         if not os.path.exists(args.keep_txt):
             raise ValueError("FILE {} does not exist!!!".format(args.keep_txt))
-        with args.keep_txt as file:
+        with open(args.keep_txt) as file:
             for line in file:
                 keep_cats = line.split(',')
                 break # only read first line
