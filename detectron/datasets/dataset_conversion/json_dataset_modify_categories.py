@@ -98,6 +98,8 @@ def main():
     else:
         raise ValueError("You have to specify either remove.txt or keep.txt!")
 
+    print("Creating new annotations with following categories {}".format(new_cat_names))
+
     new_categories = [x for x in categories if x['name'] in new_cat_names]
     new_categories_ids = [x['id'] for x in new_categories]
     new_annotations =[x for x in annotations if x['category_id'] in new_categories_ids]
@@ -123,9 +125,10 @@ def main():
 
     with open(json_file_name + '_ignore_complete.json', 'w') as fp:
         json.dump(new_dataset_dict, fp)
-
+    print("wrote file {}".format(json_file_name + '_ignore_complete.json'))
     with open(json_file_name + '_ignore.json', 'w') as fp:
         json.dump(new_dataset_dict_partial, fp)
+    print("wrote file {}".format(json_file_name + '_ignore.json'))
 
 
 if __name__ == '__main__':

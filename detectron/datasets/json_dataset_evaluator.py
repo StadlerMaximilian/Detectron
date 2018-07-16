@@ -224,6 +224,7 @@ def _do_detection_eval(json_dataset, res_file, output_dir):
     logger.info('Wrote json eval results to: {}'.format(eval_file))
     return coco_eval
 
+
 def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
     coco_dt = json_dataset.COCO.loadRes(str(res_file))
     coco_eval = COCOeval(json_dataset.COCO, coco_dt, 'bbox')
