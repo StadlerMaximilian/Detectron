@@ -26,8 +26,8 @@ import numpy as np
 import os
 import uuid
 
-from pycocotools.cocoeval import COCOeval
-from pycocotools.cocoeval import Params
+from detectron.pycocotools.cocoeval import COCOeval
+from detectron.pycocotools.cocoeval import Params
 
 from detectron.core.config import cfg
 from detectron.utils.io import save_object
@@ -234,15 +234,15 @@ def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
               "p3", "p5", "p6", "pg", "ph4", "ph4.5", "ph5", "pl100", "pl120", "pl20", "pl30", "pl40", "pl5", "pl50",
               "pl60", "pl70", "pl80", "pm20", "pm30", "pm55", "pn", "pne", "po", "pr40", "w13", "w32", "w55", "w57",
               "w59", "wo"]
-    #type45 = "i2,i4,i5,il100,il60,il80,io,ip,p10,p11,p12,p19,p23,p26,p27,p3,p5,p6,pg,ph4,ph4.5,ph5,pl100," \
-    #         "pl120,pl20,pl30,pl40,pl5,pl50,pl60,pl70,pl80,pm20,pm30,pm55,pn,pne,po,pr40,w13,w32,w55,w57,w59,wo"
-    #type45 = type45.split(',')
 
     # create new params for evaluation
     type45_params = Params(iouType='bbox')
     type45_params.imgIds = sorted(json_dataset.COCO.getImgIds())
     type45_params.catIds = sorted(json_dataset.COCO.getCatIds(catNms=type45))
     new_classes = ['__background__'] + type45
+
+    # override new_classes functionality for testing
+    new_classes = None
 
     coco_eval.accumulate()
     _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=new_classes)

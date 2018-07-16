@@ -192,17 +192,47 @@ _DATASETS = {
         _ANN_FN:
             _DATA_DIR + '/tt100k/annotations/tt100k_train.json'
     },
+    'tt100k_trainval_ignore_complete': {
+        _IM_DIR:
+            _DATA_DIR + '/tt100k/train',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/tt100k_train_ignore_complete.json'
+    },
+    'tt100k_trainval_ignore': {
+        _IM_DIR:
+            _DATA_DIR + '/tt100k/train',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/tt100k_train_ignore.json'
+    },
     'tt100k_test': {
         _IM_DIR:
             _DATA_DIR + '/tt100k/test',
         _ANN_FN:
             _DATA_DIR + '/tt100k/annotations/tt100k_test.json'
     },
-    'tt100k_val_small': {
+    'tt100k_test_ignore': {
+        _IM_DIR:
+            _DATA_DIR + '/tt100k/test',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/tt100k_test_ignore.json'
+    },
+    'tt100k_test_ignore_complete': {
+        _IM_DIR:
+            _DATA_DIR + '/tt100k/test',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/tt100k_test_ignore_complete.json'
+    },
+    'tt100k_val_small_ignore': {
         _IM_DIR:
             _DATA_DIR + '/tt100k/other',
         _ANN_FN:
-            _DATA_DIR + '/tt100k/annotations/tt100k_other.json'
+            _DATA_DIR + '/tt100k/annotations/tt100k_other_ignore.json'
+    },
+    'tt100k_val_small_ignore_complete': {
+        _IM_DIR:
+            _DATA_DIR + '/tt100k/other',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/tt100k_other_ignore_complete.json'
     },
     'kitti_trainval': {
         _IM_DIR:

@@ -2,6 +2,8 @@ import json
 import sys
 import os
 import argparse
+from conversion_base import CocoConversion
+
 
 """
 Utilites to remove categories that should be ignored during testing
@@ -33,13 +35,38 @@ def parse_args():
         dest='keep_txt',
         type=str,
         help='path to a.txt-file where you list your categories to be kept.',
-        default=''
+        default=""
     )
 
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
     return parser.parse_args()
+
+
+def create_ignore_coco_annotation(old_coco_annotation, ignore_flag=0):
+    if ignore_flag == 0:
+        return old_coco_annotation
+
+    else:
+        id = old_coco_annotation['id']
+        image_id = old_coco_annotation['image_id']
+        category_id = old_coco_annotation['category_id']
+        segmentation = old_coco_annotation['segmentation']
+        area = old_coco_annotation['area']
+        bbox = old_coco_annotation['bbox']
+        iscrowd = old_coco_annotation['iscrowd']
+        ignore = ignore_flag
+
+        annotation = {"id": id,
+                      "image_id": image_id,
+                      "category_id": category_id,
+                      "segmentation": segmentation,
+                      "area": area,
+                      "bbox": bbox,
+                      "iscrowd": iscrowd,
+                      "ignore": ignore}
+        return annotation
 
 
 def main():
@@ -75,6 +102,9 @@ def main():
     new_categories_ids = [x['id'] for x in new_categories]
     new_annotations =[x for x in annotations if x['category_id'] in new_categories_ids]
 
+    new_annotations_partial = [create_ignore_coco_annotation(x, ignore_flag=1) if x['category_id'] in new_categories_ids
+                               else create_ignore_coco_annotation(x) for x in annotations]
+
     new_dataset_dict = {"info": info,
                         "images": images,
                         "annotations": new_annotations,
@@ -83,8 +113,19 @@ def main():
                         "categories": new_categories
                         }
 
-    with open(json_file_name + '_ignore.json', 'w') as fp:
+    new_dataset_dict_partial = {"info": info,
+                                "images": images,
+                                "annotations": new_annotations_partial,
+                                "type": "instances",
+                                "licenses": licenses,
+                                "categories": categories
+                                }
+
+    with open(json_file_name + '_ignore_complete.json', 'w') as fp:
         json.dump(new_dataset_dict, fp)
+
+    with open(json_file_name + '_ignore.json', 'w') as fp:
+        json.dump(new_dataset_dict_partial, fp)
 
 
 if __name__ == '__main__':
