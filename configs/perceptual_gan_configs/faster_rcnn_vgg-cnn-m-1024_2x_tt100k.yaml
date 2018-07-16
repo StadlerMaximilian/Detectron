@@ -25,7 +25,7 @@ FAST_RCNN:
   ROI_XFORM_METHOD: RoIAlign
 TRAIN:
   WEIGHTS: . # insert path
-  DATASETS: ('tt100k_trainval',)
+  DATASETS: ('tt100k_trainval_ignore_complete',)
   SCALES: (2048,)
   MAX_SIZE: 2048
   IMS_PER_BATCH: 1
@@ -33,7 +33,7 @@ TRAIN:
   SNAPSHOT_ITERS: 40000
   USE_FLIPPED: True
 TEST:
-  DATASETS: ('tt100k_test',)
+  DATASETS: ('tt100k_test_ignore_complete',)
   SCALE: 2048
   MAX_SIZE: 2048
   NMS: 0.5
