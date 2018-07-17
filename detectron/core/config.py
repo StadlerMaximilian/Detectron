@@ -171,7 +171,7 @@ __C.TRAIN.RPN_POST_NMS_TOP_N = 2000
 __C.TRAIN.RPN_STRADDLE_THRESH = 0
 
 # Proposal height and width both need to be greater than RPN_MIN_SIZE
-# (at orig image scale; not scale used during training or inference)
+# (at orig image scale; not scale used durfaster_rcnn_vgg-cnn-m-1024_1x_tt100k_2gpu.yamling training or inference)
 __C.TRAIN.RPN_MIN_SIZE = 0
 
 # Filter proposals that are inside of crowd regions by CROWD_FILTER_THRESH

@@ -26,16 +26,16 @@ FAST_RCNN:
 TRAIN:
   WEIGHTS: . # insert path
   DATASETS: ('tt100k_trainval_ignore_complete',)
-  SCALES: (2048,)
-  MAX_SIZE: 2048
+  SCALES: (1600,)
+  MAX_SIZE: 1600
   IMS_PER_BATCH: 1
   BATCH_SIZE_PER_IM: 128
   SNAPSHOT_ITERS: 20000
   USE_FLIPPED: False
 TEST:
   DATASETS: ('tt100k_test_ignore_complete',)
-  SCALE: 2048
-  MAX_SIZE: 2048
+  SCALE: 1600
+  MAX_SIZE: 1600
   NMS: 0.5
   RPN_PRE_NMS_TOP_N: 6000
   RPN_POST_NMS_TOP_N: 1000

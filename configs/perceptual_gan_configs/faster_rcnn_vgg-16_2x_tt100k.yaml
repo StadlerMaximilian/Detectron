@@ -1,6 +1,6 @@
 MODEL:
   TYPE: generalized_rcnn
-  CONV_BODY: VGG_CNN_M_1024.add_VGG_CNN_M_1024_conv5_body
+  CONV_BODY: VGG16.add_VGG16_conv5_body
   NUM_CLASSES: 46
   FASTER_RCNN: True
 NUM_GPUS: 1
@@ -16,8 +16,8 @@ SOLVER:
   # COCO train: 118286 images, 860001 annotations (around 7.2 per image)
   # tt100k: 6105 images, 16527 annotations (around 2.7 per image)
 
-  MAX_ITER: 120000 # COCO: default 180.000 for 8 GPUs
-  STEPS: [0, 80000, 106666] # COCO: default [0, 120000, 160000]
+  MAX_ITER: 240000 # doubled from 80000 # COCO: default 180.000
+  STEPS: [0, 150000, 213333] # doubled from [0, 54000, 71000] # COCO: default [0, 120000, 160000]
 RPN:
   SIZES: (8, 16, 32, 64, 128)
 FAST_RCNN:
@@ -30,7 +30,7 @@ TRAIN:
   MAX_SIZE: 2048
   IMS_PER_BATCH: 1
   BATCH_SIZE_PER_IM: 128
-  SNAPSHOT_ITERS: 20000
+  SNAPSHOT_ITERS: 40000
   USE_FLIPPED: False
 TEST:
   DATASETS: ('tt100k_test_ignore_complete',)

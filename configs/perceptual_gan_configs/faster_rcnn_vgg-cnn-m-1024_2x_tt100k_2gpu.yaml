@@ -7,7 +7,7 @@ NUM_GPUS: 1
 SOLVER:
   WEIGHT_DECAY: 0.0005 # originally 0.0001 for COCO
   LR_POLICY: steps_with_decay
-  BASE_LR: 0.00125 #default is 0.01 for 8 GPUS
+  BASE_LR: 0.0025 #default is 0.01 for 8 GPUS
   GAMMA: 0.1
 
   # 1x schedule (note TRAIN.IMS_PER_BATCH: 1)
@@ -16,8 +16,8 @@ SOLVER:
   # COCO train: 118286 images, 860001 annotations (around 7.2 per image)
   # tt100k: 6105 images, 16527 annotations (around 2.7 per image)
 
-  MAX_ITER: 120000 # COCO: default 180.000 for 8 GPUs
-  STEPS: [0, 80000, 106666] # COCO: default [0, 120000, 160000]
+  MAX_ITER: 120000 # doubled from 80000 # COCO: default 180.000
+  STEPS: [0, 75000, 106666] # doubled from [0, 54000, 71000] # COCO: default [0, 120000, 160000]
 RPN:
   SIZES: (8, 16, 32, 64, 128)
 FAST_RCNN:
