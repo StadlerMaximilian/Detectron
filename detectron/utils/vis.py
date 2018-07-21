@@ -258,6 +258,8 @@ def calc_intersection(dt_box, gt_box):
     yi_1 = max(dt_box[1], gt_box[1])
     xi_2 = min(dt_box[2], gt_box[2])
     yi_2 = min(dt_box[3], gt_box[3])
+    xi_2 = max(xi_2, xi_1)
+    yi_2 = max(yi_2, yi_1)
     return [xi_1, yi_1, xi_2, yi_2]
 
 
@@ -296,10 +298,10 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
             # continue if dt does not match gt at all
             if math.isnan(iou):
                 continue
-            if iou < 0.5:
+            if iou < 0.3:
                 continue
-            print(iou)
-            if iou >= 0.5:
+                
+            if iou >= 0.3:
                 if dt_cls == gt_cls:
                     matches[i_dt] = 1
                     matches_gt[i_gt] = 1
