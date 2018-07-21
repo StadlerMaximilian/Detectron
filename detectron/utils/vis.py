@@ -385,7 +385,7 @@ def vis_one_image(
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
-                          fill=False, edgecolor='edge_color',
+                          fill=False, edgecolor=edge_color,
                           linewidth=1, alpha=box_alpha))
 
         if show_class:
@@ -395,7 +395,7 @@ def vis_one_image(
                 fontsize=6,
                 family='serif',
                 bbox=dict(
-                    facecolor='edge_color', alpha=0.4, pad=0, edgecolor='none'),
+                    facecolor=edge_color, alpha=0.4, pad=0, edgecolor='none'),
                 color='white')
 
         # show mask
