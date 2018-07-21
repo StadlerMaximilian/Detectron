@@ -277,6 +277,10 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
     matches = [-1]*len(sorted_inds)
     matches_gt = [0]*len(sorted_inds_gt)
 
+    print(classes)
+    print(gt_classes)
+    return matches, matches_gt
+
     for i_gt in sorted_inds_gt:
         gt_box = gt_boxes[i_gt]
         gt_cls = gt_classes[i_gt]
