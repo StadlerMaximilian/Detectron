@@ -300,7 +300,7 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
                 continue
             if iou < 0.3:
                 continue
-                
+
             if iou >= 0.3:
                 if dt_cls == gt_cls:
                     matches[i_dt] = 1
@@ -366,8 +366,8 @@ def vis_one_image(
                     plt.Rectangle((bbox[0], bbox[1]),
                                   bbox[2] - bbox[0],
                                   bbox[3] - bbox[1],
-                                  fill=False, edgecolor='b',
-                                  linewidth=1, alpha=box_alpha))
+                                  fill=False, edgecolor='g',
+                                  linewidth=1.5, alpha=box_alpha))
                 if show_class:
                     ax.text(
                         bbox[0], bbox[1] - 6,
@@ -375,7 +375,7 @@ def vis_one_image(
                         fontsize=6,
                         family='serif',
                         bbox=dict(
-                            facecolor='b', alpha=0.4, pad=0, edgecolor='none'),
+                            facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
                         color='white')
 
     mask_color_id = 0
@@ -396,14 +396,14 @@ def vis_one_image(
             elif matches[i] == 0:
                 edge_color = 'r'
             elif matches[i] == 1:
-                edge_color = 'g'
+                edge_color = 'b'
 
         ax.add_patch(
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
                           fill=False, edgecolor=edge_color,
-                          linewidth=1, alpha=box_alpha))
+                          linewidth=1.5, alpha=box_alpha))
 
         # do not plot not matched detections
         if show_class and edge_color != 'k':
