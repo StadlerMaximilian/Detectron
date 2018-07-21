@@ -73,6 +73,13 @@ def parse_args():
         default=0,
         type=int
     )
+    parser.add_argument(
+        '--ext',
+        dest='ext',
+        help='extension of visualization',
+        default='pdf',
+        type=str
+    )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -80,9 +87,8 @@ def parse_args():
     return args
 
 
-def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
+def vis(dataset, detections_pkl, thresh, output_dir, limit=0, ext='pdf'):
     ds = JsonDataset(dataset)
-    print(ds.classes)
     roidb = ds.get_roidb(gt=True) # include ground-truth bboxes
 
     with open(detections_pkl, 'r') as f:
@@ -131,7 +137,8 @@ def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
             box_alpha=0.8,
             dataset=ds,
             show_class=True,
-            gt_entry=entry
+            gt_entry=entry,
+            ext=ext
         )
 
 
@@ -142,5 +149,6 @@ if __name__ == '__main__':
         opts.detections,
         opts.thresh,
         opts.output_dir,
-        limit=opts.first
+        limit=opts.first,
+        ext=opts.ext
     )

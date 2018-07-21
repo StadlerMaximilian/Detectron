@@ -23,6 +23,7 @@ from __future__ import unicode_literals
 import cv2
 import numpy as np
 import os
+import math
 
 import detectron.pycocotools.mask as mask_util
 
@@ -249,6 +250,62 @@ def vis_one_image_opencv(
     return im
 
 
+def calc_intersection(dt_box, gt_box):
+    xi_1 = max(dt_box[0], gt_box[0])
+    yi_1 = max(dt_box[1], gt_box[1])
+    xi_2 = min(dt_box[2], gt_box[2])
+    yi_2 = min(dt_box[3], gt_box[3])
+    return max(0.0, xi_2 - xi_1)*max(0.0, yi_2 - yi_1)
+
+
+def calc_iou(dt_box, gt_box):
+    area_gt = (gt_box[2] - gt_box[0]) * (gt_box[3] - gt_box[1])
+    area_dt = (dt_box[2] - dt_box[0]) * (dt_box[3] - dt_box[1])
+    area_cr = calc_intersection(dt_box, gt_box)
+    return area_cr / (area_gt + area_dt + area_cr)
+
+
+def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes):
+    """ function that creates list representing whether detection have been matched correctly or not
+        if matches[i] = -1 : boxes[i] does not match a ground-truth value
+        if matches[i] = +0 : boxes[i] has overlap with gt, but not right class
+        if matches[i] = +1 : boxes[i] does match ground-truth-value correctly
+
+        if matches_gt[i] = 0: gt box is matched correctly
+        if matches_gt[i] = iou: gt box is not matched correctly with iou overlap with a dt
+
+    """
+    matches = [-1]*len(sorted_inds)
+    matches_gt = [0]*len(sorted_inds_gt)
+
+    for i_gt in sorted_inds_gt:
+        gt_box = gt_boxes[i_gt]
+        gt_cls = gt_classes[i_gt]
+
+        for i_dt in sorted_inds:
+            dt_box = boxes[i_dt]
+            dt_cls = classes[i_dt]
+            iou = calc_iou(dt_box, gt_box)
+
+            # continue if dt does not match gt at all
+            if math.isnan(iou):
+                continue
+            elif iou < 0.5:
+                continue
+
+            # set not matched correctly flag if iou > 0.5, but wrong class
+            if dt_cls != gt_cls and iou >= 0.5:
+                matches[i_dt] = 0
+            # set matched flag if correctly matched
+            elif dt_cls == gt_cls and iou >= 0.5 and iou > matches_gt[i_gt]:
+                matches[i_dt] = 1
+                matches_gt[i_gt] = iou
+            elif dt_cls == gt_cls and iou >= 0.5:
+                matches[i_gt] = 0
+
+    return matches, matches_gt
+
+
 def vis_one_image(
         im, im_name, output_dir, boxes, segms=None, keypoints=None, thresh=0.9,
         kp_thresh=2, dpi=200, box_alpha=0.0, dataset=None, show_class=False,
@@ -282,6 +339,10 @@ def vis_one_image(
     fig.add_axes(ax)
     ax.imshow(im)
 
+    # Display in largest to smallest order to reduce occlusion
+    areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
+    sorted_inds = np.argsort(-areas)
+
     if gt_entry is not None:
         gt_boxes = gt_entry['boxes']
         gt_classes = gt_entry['gt_classes']
@@ -289,19 +350,19 @@ def vis_one_image(
         areas_gt = (gt_boxes[:, 2] - gt_boxes[:, 0]) * (gt_boxes[:, 3] - gt_boxes[:, 1])
         sorted_inds_gt = np.argsort(-areas_gt)
 
+        matches, matches_gt = match_gt_dt(gt_boxes, boxes)
+
         for i in sorted_inds_gt:
             bbox = gt_boxes[i]
 
-            ax.add_patch(
-                plt.Rectangle((bbox[0], bbox[1]),
-                              bbox[2] - bbox[0],
-                              bbox[3] - bbox[1],
-                              fill=False, edgecolor='g',
-                              linewidth=1, alpha=box_alpha))
-
-    # Display in largest to smallest order to reduce occlusion
-    areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-    sorted_inds = np.argsort(-areas)
+            # only add ground-truth box if not matched good enough
+            if matches_gt[i] == 0:
+                ax.add_patch(
+                    plt.Rectangle((bbox[0], bbox[1]),
+                                  bbox[2] - bbox[0],
+                                  bbox[3] - bbox[1],
+                                  fill=False, edgecolor='g',
+                                  linewidth=1, alpha=box_alpha))
 
     mask_color_id = 0
     for i in sorted_inds:
@@ -314,21 +375,28 @@ def vis_one_image(
         # modified color from g to b
         # changed linewidth from 0.5 to 2
         # changed pad from 0 to 2
+        if matches[i] == -1:
+            edge_color = 'c'
+        elif matches[i] == 0:
+            edge_color = 'r'
+        elif matches[i] == 1:
+            edge_color = 'b'
+
         ax.add_patch(
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
-                          fill=False, edgecolor='b',
+                          fill=False, edgecolor='edge_color',
                           linewidth=1, alpha=box_alpha))
 
         if show_class:
             ax.text(
                 bbox[0], bbox[1] - 2,
                 get_class_string(classes[i], score, dataset),
-                fontsize=4, # changed fontsize from 3 to 8
+                fontsize=6,
                 family='serif',
                 bbox=dict(
-                    facecolor='b', alpha=0.4, pad=0, edgecolor='none'),
+                    facecolor='edge_color', alpha=0.4, pad=0, edgecolor='none'),
                 color='white')
 
         # show mask
