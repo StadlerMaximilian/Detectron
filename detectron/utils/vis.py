@@ -261,13 +261,13 @@ def calc_iou(dt_box, gt_box):
     area_gt = (gt_box[2] - gt_box[0]) * (gt_box[3] - gt_box[1])
     area_dt = (dt_box[2] - dt_box[0]) * (dt_box[3] - dt_box[1])
     area_cr = calc_intersection(dt_box, gt_box)
-    return area_cr / (area_gt + area_dt + area_cr)
+    return area_cr / (area_gt + area_dt - area_cr)
 
 
 def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes):
     """ function that creates list representing whether detection have been matched correctly or not
         if matches[i] = -1 : boxes[i] does not match a ground-truth value
-        if matches[i] = +0 : boxes[i] has overlap with gt, but not right class
+        if matches[i] = +0 : boxes[i] does not match a gt value correctly
         if matches[i] = +1 : boxes[i] does match ground-truth-value correctly
 
         if matches_gt[i] = 0: gt box is matched correctly
@@ -284,6 +284,11 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
         for i_dt in sorted_inds:
             dt_box = boxes[i_dt]
             dt_cls = classes[i_dt]
+
+            if dt_cls != gt_cls:
+                matches[i_dt] = 0
+                continue
+
             iou = calc_iou(dt_box, gt_box)
 
             # continue if dt does not match gt at all
@@ -292,15 +297,10 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
             elif iou < 0.5:
                 continue
 
-            # set not matched correctly flag if iou > 0.5, but wrong class
-            if dt_cls != gt_cls and iou >= 0.5:
-                matches[i_dt] = 0
             # set matched flag if correctly matched
-            elif dt_cls == gt_cls and iou >= 0.5 and iou > matches_gt[i_gt]:
+            if dt_cls == gt_cls and iou >= 0.5:
                 matches[i_dt] = 1
-                matches_gt[i_gt] = iou
-            elif dt_cls == gt_cls and iou >= 0.5:
-                matches[i_gt] = 0
+                matches_gt[i_gt] = 1
 
     return matches, matches_gt
 
@@ -354,7 +354,7 @@ def vis_one_image(
         for i in sorted_inds_gt:
             bbox = gt_boxes[i]
 
-            # only add ground-truth box if not matched good enough
+            # only add ground-truth box if not matched
             if matches_gt[i] == 0:
                 ax.add_patch(
                     plt.Rectangle((bbox[0], bbox[1]),
@@ -383,12 +383,14 @@ def vis_one_image(
         # modified color from g to b
         # changed linewidth from 0.5 to 2
         # changed pad from 0 to 2
-        if matches[i] == -1:
-            edge_color = 'c'
-        elif matches[i] == 0:
-            edge_color = 'r'
-        elif matches[i] == 1:
-            edge_color = 'b'
+        edge_color = 'b'
+        if gt_entry is not None:
+            if matches[i] == -1:
+                edge_color = 'c'
+            elif matches[i] == 0:
+                edge_color = 'r'
+            elif matches[i] == 1:
+                edge_color = 'b'
 
         ax.add_patch(
             plt.Rectangle((bbox[0], bbox[1]),
