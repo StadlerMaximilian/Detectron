@@ -249,18 +249,22 @@ def vis_one_image_opencv(
     return im
 
 
+def calc_rect_area(box):
+    return max(0.0, (box[2] - box[0])*(box[3] - box[1]))
+
+
 def calc_intersection(dt_box, gt_box):
     xi_1 = max(dt_box[0], gt_box[0])
     yi_1 = max(dt_box[1], gt_box[1])
     xi_2 = min(dt_box[2], gt_box[2])
     yi_2 = min(dt_box[3], gt_box[3])
-    return max(0.0, xi_2 - xi_1)*max(0.0, yi_2 - yi_1)
+    return [xi_1, yi_1, xi_2, yi_2]
 
 
 def calc_iou(dt_box, gt_box):
-    area_gt = (gt_box[2] - gt_box[0]) * (gt_box[3] - gt_box[1])
-    area_dt = (dt_box[2] - dt_box[0]) * (dt_box[3] - dt_box[1])
-    area_cr = calc_intersection(dt_box, gt_box)
+    area_gt = calc_rect_area (gt_box)
+    area_dt = calc_rect_area(dt_box)
+    area_cr = calc_rect_area(calc_intersection(dt_box, gt_box))
     return area_cr / (area_gt + area_dt - area_cr)
 
 
@@ -270,41 +274,34 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
         if matches[i] = +0 : boxes[i] does not match a gt value correctly
         if matches[i] = +1 : boxes[i] does match ground-truth-value correctly
 
-        if matches_gt[i] = 0: gt box is matched correctly
-        if matches_gt[i] = iou: gt box is not matched correctly with iou overlap with a dt
-
+        if matches_gt[i] = 0: gt box is not matched correctly
+        if matches_gt[i] = 1: gt box is matched correctly
     """
-    matches = [-1]*len(sorted_inds)
-    matches_gt = [0]*len(sorted_inds_gt)
-
-    print(classes)
-    print(gt_classes)
-    return matches, matches_gt
+    matches = [-1]*len(boxes)
+    matches_gt = [0]*len(gt_boxes)
 
     for i_gt in sorted_inds_gt:
-        gt_box = gt_boxes[i_gt]
+        gt_box = gt_boxes[i_gt, :4]
         gt_cls = gt_classes[i_gt]
 
         for i_dt in sorted_inds:
-            dt_box = boxes[i_dt]
+            dt_box = boxes[i_dt, :4]
             dt_cls = classes[i_dt]
-
-            if dt_cls != gt_cls:
-                matches[i_dt] = 0
-                continue
 
             iou = calc_iou(dt_box, gt_box)
 
             # continue if dt does not match gt at all
             if math.isnan(iou):
                 continue
-            elif iou < 0.5:
+            if iou < 0.5:
                 continue
 
-            # set matched flag if correctly matched
-            if dt_cls == gt_cls and iou >= 0.5:
-                matches[i_dt] = 1
-                matches_gt[i_gt] = 1
+            if iou >= 0.5:
+                if dt_cls == gt_cls:
+                    matches[i_dt] = 1
+                    matches_gt[i_gt] = 1
+                else:
+                    matches[i_dt] = 0
 
     return matches, matches_gt
 
@@ -356,7 +353,7 @@ def vis_one_image(
         matches, matches_gt = match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes)
 
         for i in sorted_inds_gt:
-            bbox = gt_boxes[i]
+            bbox = gt_boxes[i, :]
 
             # only add ground-truth box if not matched
             if matches_gt[i] == 0:
@@ -368,7 +365,7 @@ def vis_one_image(
                                   linewidth=1, alpha=box_alpha))
                 if show_class:
                     ax.text(
-                        bbox[0], bbox[1] - 2,
+                        bbox[0], bbox[1] - 6,
                         get_class_string(gt_classes[i], 1.0, dataset),
                         fontsize=6,
                         family='serif',
