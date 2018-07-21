@@ -136,6 +136,7 @@ def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
 
 if __name__ == '__main__':
     opts = parse_args()
+    print(opts.dataset.classes)
     vis(
         opts.dataset,
         opts.detections,
