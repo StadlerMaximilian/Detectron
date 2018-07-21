@@ -9,22 +9,15 @@ SOLVER:
   LR_POLICY: steps_with_decay
   BASE_LR: 0.0025 #default is 0.01 for 8 GPUS
   GAMMA: 0.1
-
-  # 1x schedule (note TRAIN.IMS_PER_BATCH: 1)
-  # originally for 1x training: 180.000 MAX_ITER for 8 GPUS
-
-  # COCO train: 118286 images, 860001 annotations (around 7.2 per image)
-  # tt100k: 6105 images, 16527 annotations (around 2.7 per image)
-
-  MAX_ITER: 180000 # tripled from 80000 # COCO: default 180.000 for 8 GPUs
-  STEPS: [0, 120000, 160000]  # COCO: default [0, 120000, 160000]
+  MAX_ITER: 55000 # tripled from 80000 # COCO: default 180.000 for 8 GPUs
+  STEPS: [0, 30000, 45000]  # COCO: default [0, 120000, 160000]
 RPN:
-  SIZES: (8, 16, 32, 64, 128)
+  SIZES: (16, 32, 64, 128, 256)
 FAST_RCNN:
   ROI_BOX_HEAD: VGG_CNN_M_1024.add_VGG_CNN_M_1024_roi_fc_head
   ROI_XFORM_METHOD: RoIAlign
 TRAIN:
-  WEIGHTS: . # insert path
+  WEIGHTS: . # insert path in run command
   DATASETS: ('tt100k_trainval_ignore_complete',)
   SCALES: (1600,)
   MAX_SIZE: 1600
@@ -40,6 +33,6 @@ TEST:
   RPN_PRE_NMS_TOP_N: 6000
   RPN_POST_NMS_TOP_N: 1000
   FORCE_JSON_DATASET_EVAL: False
-OUTPUT_DIR: .
+OUTPUT_DIR: . # insert path in run command
 CUSTOM_DATA:
   FORCE_TEST: True
