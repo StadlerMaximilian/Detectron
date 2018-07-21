@@ -7,7 +7,7 @@
 cd "$1" 
 
 printf "Download:TT100K dataset\n"
-if [ ! -d kitti ]; then
+if [ ! -d tt100k ]; then
     mkdir tt100k
 fi
 

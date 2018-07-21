@@ -24,7 +24,7 @@ import cv2
 import numpy as np
 import os
 
-import pycocotools.mask as mask_util
+import detectron.pycocotools.mask as mask_util
 
 from detectron.utils.colormap import colormap
 import detectron.utils.env as envu
@@ -297,16 +297,6 @@ def vis_one_image(
                               bbox[3] - bbox[1],
                               fill=False, edgecolor='g',
                               linewidth=1, alpha=box_alpha))
-
-            if show_class:
-                ax.text(
-                    bbox[0], bbox[1] - 2,
-                    get_class_string(gt_classes[i], 1.0, dataset),
-                    fontsize=4,
-                    family='serif',
-                    bbox=dict(
-                        facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
-                    color='white')
 
     # Display in largest to smallest order to reduce occlusion
     areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])

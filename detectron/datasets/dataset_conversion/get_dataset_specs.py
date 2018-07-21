@@ -1,4 +1,4 @@
-from pycocotools.coco import COCO
+from detectron.pycocotools.coco import COCO
 import os
 import sys
 import glob

@@ -36,8 +36,8 @@ import scipy.sparse
 import detectron.utils.env as envu
 envu.set_up_matplotlib()
 # COCO API
-from pycocotools import mask as COCOmask
-from pycocotools.coco import COCO
+from detectron.pycocotools import mask as COCOmask
+from detectron.pycocotools.coco import COCO
 
 from detectron.core.config import cfg
 from detectron.utils.timer import Timer

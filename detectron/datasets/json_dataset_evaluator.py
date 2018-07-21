@@ -226,15 +226,14 @@ def _do_detection_eval(json_dataset, res_file, output_dir):
 
 
 def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
+    """
+    try of including functionality to only print new classes
+    yet: bug is somewhere in the handling of "classes"
+    do normal evaluation instead
+
     coco_dt = json_dataset.COCO.loadRes(str(res_file))
     coco_eval = COCOeval(json_dataset.COCO, coco_dt, 'bbox')
     coco_eval.evaluate()
-
-    # use 45 categories with more than 100 instances for evaluation
-    type45 = ["i2", "i4", "i5", "il100", "il60", "il80", "io", "ip", "p10", "p11", "p12", "p19", "p23", "p26", "p27",
-              "p3", "p5", "p6", "pg", "ph4", "ph4.5", "ph5", "pl100", "pl120", "pl20", "pl30", "pl40", "pl5", "pl50",
-              "pl60", "pl70", "pl80", "pm20", "pm30", "pm55", "pn", "pne", "po", "pr40", "w13", "w32", "w55", "w57",
-              "w59", "wo"]
 
     # create new params for evaluation
     type45_params = Params(iouType='bbox')
@@ -247,7 +246,8 @@ def _do_detection_tt100k_eval(json_dataset, res_file, output_dir):
     eval_file = os.path.join(output_dir, 'detection_results.pkl')
     save_object(coco_eval, eval_file)
     logger.info('Wrote json eval results to: {}'.format(eval_file))
-    return coco_eval
+    """
+    return _do_detection_eval(json_dataset, res_file, output_dir)
 
 
 def _log_detection_eval_metrics(json_dataset, coco_eval, new_classes=None):
