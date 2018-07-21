@@ -362,6 +362,15 @@ def vis_one_image(
                                   bbox[3] - bbox[1],
                                   fill=False, edgecolor='g',
                                   linewidth=1, alpha=box_alpha))
+                if show_class:
+                    ax.text(
+                        bbox[0], bbox[1] - 2,
+                        get_class_string(gt_classes[i], 1.0, dataset),
+                        fontsize=6,
+                        family='serif',
+                        bbox=dict(
+                            facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
+                        color='white')
 
     mask_color_id = 0
     for i in sorted_inds:
