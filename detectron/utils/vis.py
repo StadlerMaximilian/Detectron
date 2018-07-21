@@ -268,10 +268,10 @@ def calc_iou(dt_box, gt_box):
     return area_cr / (area_gt + area_dt - area_cr)
 
 
-def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes):
+def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes, threshold):
     """ function that creates list representing whether detection have been matched correctly or not
         if matches[i] = -1 : boxes[i] does not match a ground-truth value
-        if matches[i] = +0 : boxes[i] does not match a gt value correctly
+        if matches[i] = +0 : boxes[i] does not match a ground-truth value correctly
         if matches[i] = +1 : boxes[i] does match ground-truth-value correctly
 
         if matches_gt[i] = 0: gt box is not matched correctly
@@ -286,6 +286,9 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
 
         for i_dt in sorted_inds:
             dt_box = boxes[i_dt, :4]
+            score = boxes[i_dt, -1]
+            if score < threshold:
+                continue
             dt_cls = classes[i_dt]
 
             iou = calc_iou(dt_box, gt_box)
@@ -295,7 +298,7 @@ def match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classe
                 continue
             if iou < 0.5:
                 continue
-
+            print(iou)
             if iou >= 0.5:
                 if dt_cls == gt_cls:
                     matches[i_dt] = 1
@@ -350,7 +353,7 @@ def vis_one_image(
         areas_gt = (gt_boxes[:, 2] - gt_boxes[:, 0]) * (gt_boxes[:, 3] - gt_boxes[:, 1])
         sorted_inds_gt = np.argsort(-areas_gt)
 
-        matches, matches_gt = match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes)
+        matches, matches_gt = match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes, thresh)
 
         for i in sorted_inds_gt:
             bbox = gt_boxes[i, :]
@@ -361,7 +364,7 @@ def vis_one_image(
                     plt.Rectangle((bbox[0], bbox[1]),
                                   bbox[2] - bbox[0],
                                   bbox[3] - bbox[1],
-                                  fill=False, edgecolor='g',
+                                  fill=False, edgecolor='b',
                                   linewidth=1, alpha=box_alpha))
                 if show_class:
                     ax.text(
@@ -370,7 +373,7 @@ def vis_one_image(
                         fontsize=6,
                         family='serif',
                         bbox=dict(
-                            facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
+                            facecolor='b', alpha=0.4, pad=0, edgecolor='none'),
                         color='white')
 
     mask_color_id = 0
@@ -387,11 +390,11 @@ def vis_one_image(
         edge_color = 'b'
         if gt_entry is not None:
             if matches[i] == -1:
-                edge_color = 'c'
+                edge_color = 'k'
             elif matches[i] == 0:
                 edge_color = 'r'
             elif matches[i] == 1:
-                edge_color = 'b'
+                edge_color = 'g'
 
         ax.add_patch(
             plt.Rectangle((bbox[0], bbox[1]),
@@ -400,7 +403,8 @@ def vis_one_image(
                           fill=False, edgecolor=edge_color,
                           linewidth=1, alpha=box_alpha))
 
-        if show_class:
+        # do not plot not matched detections
+        if show_class and edge_color != 'k':
             ax.text(
                 bbox[0], bbox[1] - 2,
                 get_class_string(classes[i], score, dataset),
