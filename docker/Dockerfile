@@ -13,6 +13,18 @@
 # Then open http://localhost:8888 in your browser.
 #You can use the option "-v /ssdtemp:/ssdtemp" to map the 800 GB of storage space mounten on /ssdtemp in the server to the container.
 
+# include ubuntu functionality
+RUN apt-get update
+RUN apt-get install -y wget
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get install unzip
+RUN apt-get install tar
+
+# Install the COCO API
+RUN git clone https://github.com/cocodataset/cocoapi.git /cocoapi
+WORKDIR /cocoapi/PythonAPI
+RUN make install
+
 
 # Use Caffe2 image as parent image
 FROM caffe2/caffe2:snapshot-py2-cuda9.0-cudnn7-ubuntu16.04
@@ -29,11 +41,6 @@ RUN git clone https://github.com/StadlerMaximilian/Detectron /detectron_docker
 
 # Install Python dependencies
 RUN pip install -r /detectron_docker/requirements.txt
-
-# Install the COCO API
-RUN git clone https://github.com/cocodataset/cocoapi.git /cocoapi
-WORKDIR /cocoapi/PythonAPI
-RUN make install
 
 # Go to Detectron root
 WORKDIR /detectron_docker
