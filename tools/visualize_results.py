@@ -82,6 +82,7 @@ def parse_args():
 
 def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
     ds = JsonDataset(dataset)
+    print(ds.classes)
     roidb = ds.get_roidb(gt=True) # include ground-truth bboxes
 
     with open(detections_pkl, 'r') as f:
@@ -136,7 +137,6 @@ def vis(dataset, detections_pkl, thresh, output_dir, limit=0):
 
 if __name__ == '__main__':
     opts = parse_args()
-    print(opts.dataset.classes)
     vis(
         opts.dataset,
         opts.detections,
