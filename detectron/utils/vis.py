@@ -86,7 +86,6 @@ def convert_from_cls_format(cls_boxes, cls_segms, cls_keyps):
     classes = []
     for j in range(len(cls_boxes)):
         classes += [j] * len(cls_boxes[j])
-    print(classes)
     return boxes, segms, keyps, classes
 
 
@@ -350,7 +349,7 @@ def vis_one_image(
         areas_gt = (gt_boxes[:, 2] - gt_boxes[:, 0]) * (gt_boxes[:, 3] - gt_boxes[:, 1])
         sorted_inds_gt = np.argsort(-areas_gt)
 
-        matches, matches_gt = match_gt_dt(gt_boxes, boxes)
+        matches, matches_gt = match_gt_dt(boxes, sorted_inds, gt_boxes, sorted_inds_gt, classes, gt_classes)
 
         for i in sorted_inds_gt:
             bbox = gt_boxes[i]
