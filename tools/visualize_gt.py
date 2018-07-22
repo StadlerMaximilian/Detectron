@@ -64,6 +64,14 @@ def parse_args():
         default=""
     )
 
+    parser.add_argument(
+        '--ext',
+        dest='ext',
+        type=str,
+        help='file extension visualization',
+        default="png"
+    )
+
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -111,7 +119,7 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
-                          fill=False, edgecolor='y',
+                          fill=False, edgecolor='#76cd26',
                           linewidth=1, alpha=box_alpha))
 
         # do not plot not matched detections
@@ -123,7 +131,7 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
                 fontsize=6,
                 family='serif', weight='bold',
                 bbox=dict(
-                    facecolor='y', alpha=0.8, pad=1, edgecolor='none'),
+                    facecolor='#76cd26', alpha=0.8, pad=1, edgecolor='none'),
                 color='black')
 
     output_name = os.path.basename(img_name) + '.' + ext
@@ -170,7 +178,8 @@ def main():
         anns = coco.loadAnns(annIds)
         boxes = anns_to_boxes(anns)
 
-        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats, box_alpha=1.0, show_class=True)
+        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats, box_alpha=1.0,
+                               show_class=True, ext=args.ext)
 
 
 if __name__ == '__main__':

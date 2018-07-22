@@ -366,7 +366,7 @@ def vis_one_image(
                     plt.Rectangle((bbox[0], bbox[1]),
                                   bbox[2] - bbox[0],
                                   bbox[3] - bbox[1],
-                                  fill=False, edgecolor='y',
+                                  fill=False, edgecolor='#76cd26',
                                   linewidth=1, alpha=box_alpha))
                 if show_class:
                     ax.text(
@@ -375,7 +375,7 @@ def vis_one_image(
                         fontsize=6,
                         family='serif', weight='bold',
                         bbox=dict(
-                            facecolor='y', alpha=0.8, pad=1, edgecolor='none'),
+                            facecolor='#76cd26', alpha=0.8, pad=1, edgecolor='none'),
                         color='black')
 
     mask_color_id = 0
