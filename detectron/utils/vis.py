@@ -366,7 +366,7 @@ def vis_one_image(
                     plt.Rectangle((bbox[0], bbox[1]),
                                   bbox[2] - bbox[0],
                                   bbox[3] - bbox[1],
-                                  fill=False, edgecolor='#76cd26',
+                                  fill=False, edgecolor='#0cff0c',
                                   linewidth=1, alpha=box_alpha))
                 if show_class:
                     ax.text(
@@ -375,7 +375,7 @@ def vis_one_image(
                         fontsize=6,
                         family='serif', weight='bold',
                         bbox=dict(
-                            facecolor='#76cd26', alpha=0.8, pad=1, edgecolor='none'),
+                            facecolor='#0cff0c', alpha=0.8, pad=1, edgecolor='none'),
                         color='black')
 
     mask_color_id = 0
@@ -396,7 +396,7 @@ def vis_one_image(
             elif matches[i] == 0:
                 edge_color = 'r'
             elif matches[i] == 1:
-                edge_color = 'b'
+                edge_color = '#0165fc'
 
         ax.add_patch(
             plt.Rectangle((bbox[0], bbox[1]),

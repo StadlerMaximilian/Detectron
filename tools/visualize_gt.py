@@ -119,7 +119,7 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
-                          fill=False, edgecolor='#76cd26',
+                          fill=False, edgecolor='#0cff0c',
                           linewidth=1, alpha=box_alpha))
 
         # do not plot not matched detections
@@ -131,7 +131,7 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
                 fontsize=6,
                 family='serif', weight='bold',
                 bbox=dict(
-                    facecolor='#76cd26', alpha=0.8, pad=1, edgecolor='none'),
+                    facecolor='#0cff0c', alpha=0.8, pad=1, edgecolor='none'),
                 color='black')
 
     output_name = os.path.basename(img_name) + '.' + ext
