@@ -1,11 +1,23 @@
-from pycocotools.coco import COCO
-import datetime
 import os
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+import cv2
 import numpy as np
 import argparse
 import sys
+
+import detectron.utils.env as envu
+# Matplotlib requires certain adjustments in some environments
+# Must happen before importing matplotlib
+envu.set_up_matplotlib()
+import matplotlib.pyplot as plt
+from detectron.pycocotools.coco import COCO
+
+
+plt.rcParams['pdf.fonttype'] = 42  # For editing in Adobe Illustrator
+
+# OpenCL may be enabled by default in OpenCV3; disable it because it's not
+# thread safe and causes unwanted GPU memory allocations.
+cv2.ocl.setUseOpenCL(False)
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -36,41 +48,129 @@ def parse_args():
         default=''
     )
 
+    parser.add_argument(
+        '--first',
+        dest='first',
+        type=int,
+        help='visualize only specified amount of gt-images',
+        default=-1
+    )
+
+    parser.add_argument(
+        '--output_dir',
+        dest='output_dir',
+        type=str,
+        help='output directory',
+        default=""
+    )
+
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
     return parser.parse_args()
 
 
+def xywh_to_xyxy(box):
+    return [box[0], box[1], box[0] + box[2], box[1] + box[3]]
+
+
+def category_id_to_name(cats, id):
+    if id in cats:
+        return cats[id]['name']
+    else:
+        return 'id_not_found'
+
+
+def anns_to_boxes(anns):
+    boxes_xyhwh = [ann['bbox'] for ann in anns]
+    classes = [ann['category_id'] for ann in anns]
+    boxes_list = [xywh_to_xyxy(box)+[classes[ind]]for ind, box in enumerate(boxes_xyhwh)]
+    return np.array(boxes_list)
+
+
+def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
+                           dpi=200, box_alpha=0.0, show_class=False, ext='png'):
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    fig = plt.figure(frameon=False)
+    fig.set_size_inches(img.shape[1] / dpi, img.shape[0] / dpi)
+    ax = plt.Axes(fig, [0., 0., 1., 1.])
+    ax.axis('off')
+    fig.add_axes(ax)
+    ax.imshow(img)
+    # Display in largest to smallest order to reduce occlusion
+    areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
+    sorted_inds = np.argsort(-areas)
+
+    for i in sorted_inds:
+        bbox = boxes[i, :4]
+        class_id = boxes[i, -1]
+        ax.add_patch(
+            plt.Rectangle((bbox[0], bbox[1]),
+                          bbox[2] - bbox[0],
+                          bbox[3] - bbox[1],
+                          fill=False, edgecolor='y',
+                          linewidth=1, alpha=box_alpha))
+
+        # do not plot not matched detections
+        # if gt-boxes drawn: show_classes always for wrong (red) detections
+        if show_class:
+            ax.text(
+                bbox[0] + 1, bbox[1] - 6,
+                category_id_to_name(cats, class_id),
+                fontsize=6,
+                family='serif', weight='bold',
+                bbox=dict(
+                    facecolor='y', alpha=0.8, pad=1, edgecolor='none'),
+                color='black')
+
+    output_name = os.path.basename(img_name) + '.' + ext
+    fig.savefig(os.path.join(output_dir, '{}'.format(output_name)), dpi=dpi)
+    plt.close('all')
+
+
 def main():
     args = parse_args()
     if args.json_file=='':
         raise ValueError('No json_file specified.')
-    if args.img_id==-1:
-        raise ValueError('No Img_id specified')
+    if args.img_id==-1 and args.first==-1:
+        raise ValueError('No images to visualize specified')
     if args.img_dir=='':
         raise ValueError('No img_dir specified')
-
+    if args.output_dir=='':
+        raise ValueError('No output_dir specified')
     if not os.path.exists(args.json_file):
         raise ValueError('Specified json_file does not exist')
 
-
     coco = COCO(args.json_file)
-    img = coco.loadImgs(args.img_id)
-    img = img[0]
-    if os.path.exists(args.img_dir + '/' + img['file_name']):
-        img_path = args.img_dir + '/' + img['file_name']
-    else:
-        raise ValueError('Desired image does not exist')
 
-    fig = plt.figure()
-    I = mpimg.imread(img_path)
-    plt.axis('off')
-    plt.imshow(I)
-    annIds = coco.getAnnIds(imgIds=img['id'], iscrowd=None)
-    anns = coco.loadAnns(annIds)
-    coco.showAnns(anns)
-    plt.show()
+    if args.img_id != -1:
+        img_ids = coco.getImgIds(imgIds=args.img_id)
+    # else first specified
+    else:
+        img_ids = coco.getImgIds()
+        img_ids = [img_ids[rand_int] for rand_int in np.random.randint(0, len(img_ids), args.first)]
+
+    imgs = coco.loadImgs(ids=img_ids)
+
+    for i, img in enumerate(imgs):
+        if i % 10 == 0:
+            print("{}/{}".format(i+1, len(imgs)))
+        if os.path.exists(args.img_dir + '/' + img['file_name']):
+            img_path = args.img_dir + '/' + img['file_name']
+        else:
+            raise ValueError('Desired image does not exist')
+        im = cv2.imread(img_path)
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        im_name = img['file_name'].split('.')[0] + '_gt_boxes'
+
+        annIds = coco.getAnnIds(imgIds=img['id'], iscrowd=None)
+        anns = coco.loadAnns(annIds)
+        boxes = anns_to_boxes(anns)
+
+        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats, box_alpha=1.0, show_class=True)
 
 
 if __name__ == '__main__':

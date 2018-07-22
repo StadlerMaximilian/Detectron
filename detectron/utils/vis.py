@@ -366,17 +366,17 @@ def vis_one_image(
                     plt.Rectangle((bbox[0], bbox[1]),
                                   bbox[2] - bbox[0],
                                   bbox[3] - bbox[1],
-                                  fill=False, edgecolor='g',
-                                  linewidth=1.5, alpha=box_alpha))
+                                  fill=False, edgecolor='y',
+                                  linewidth=1, alpha=box_alpha))
                 if show_class:
                     ax.text(
-                        bbox[0], bbox[1] - 6,
+                        bbox[0] + 1, bbox[1] - 6,
                         get_class_string(gt_classes[i], 1.0, dataset),
                         fontsize=6,
-                        family='serif',
+                        family='serif', weight='bold',
                         bbox=dict(
-                            facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
-                        color='white')
+                            facecolor='y', alpha=0.8, pad=1, edgecolor='none'),
+                        color='black')
 
     mask_color_id = 0
     for i in sorted_inds:
@@ -403,18 +403,23 @@ def vis_one_image(
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
                           fill=False, edgecolor=edge_color,
-                          linewidth=1.5, alpha=box_alpha))
+                          linewidth=1, alpha=box_alpha))
 
         # do not plot not matched detections
-        if show_class and edge_color != 'k':
+        # if gt-boxes drawn: show_classes always for wrong (red) detections
+        if show_class or (gt_entry is not None and edge_color == 'r'):
+            if edge_color == 'b' or edge_color == 'k':
+                text_color = 'white'
+            else:
+                text_color = 'black'
             ax.text(
-                bbox[0], bbox[1] - 2,
+                bbox[0] + 1, bbox[1] - 6,
                 get_class_string(classes[i], score, dataset),
                 fontsize=6,
-                family='serif',
+                family='serif', weight='bold',
                 bbox=dict(
-                    facecolor=edge_color, alpha=0.4, pad=0, edgecolor='none'),
-                color='white')
+                    facecolor=edge_color, alpha=0.8, pad=1, edgecolor='none'),
+                color=text_color)
 
         # show mask
         if segms is not None and len(segms) > i:

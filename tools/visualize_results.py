@@ -134,9 +134,9 @@ def vis(dataset, detections_pkl, thresh, output_dir, limit=0, ext='pdf'):
             segms=cls_segms_i,
             keypoints=cls_keyps_i,
             thresh=thresh,
-            box_alpha=0.8,
+            box_alpha=1.0,
             dataset=ds,
-            show_class=True,
+            show_class=False,
             gt_entry=entry,
             ext=ext
         )
