@@ -421,7 +421,7 @@ def vis_one_image(
                 ax.text(
                     bbox[0] + 11, bbox[1] - 6,
                     get_class_string(classes[i], score, dataset) + '\n({})'.format(
-                        get_class_string(wrong_classes[i], "", dataset)),
+                        get_class_string(wrong_classes[i], 1.0, dataset)),
                     fontsize = cfg.VIS.LABEL.FONTSIZE,
                     family = cfg.VIS.LABEL.FAMILY, weight = cfg.VIS.LABEL.WEIGHT,
                     bbox = dict(
