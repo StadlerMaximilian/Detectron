@@ -394,7 +394,7 @@ def vis_one_image(
 
         edge_color = 'b'
         text_color = 'white'
-        if gt_entry is not None and not cfg.VI.ONLY_DETS:
+        if gt_entry is not None and not cfg.VIS.ONLY_DETS:
             if matches[i] == -1:
                 edge_color = cfg.VIS.FP_COLOR
                 text_color = cfg.VIS.LABEL.FP_TEXTCOLOR
