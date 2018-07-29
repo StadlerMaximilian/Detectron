@@ -28,6 +28,7 @@ import cv2
 import os
 import sys
 
+from detectron.core.config import cfg
 from detectron.datasets.json_dataset import JsonDataset
 import detectron.utils.vis as vis_utils
 
@@ -134,7 +135,7 @@ def vis(dataset, detections_pkl, thresh, output_dir, limit=0, ext='pdf'):
             segms=cls_segms_i,
             keypoints=cls_keyps_i,
             thresh=thresh,
-            box_alpha=1.0,
+            box_alpha=cfg.VIS.BOX.ALPHA,
             dataset=ds,
             show_class=False,
             gt_entry=entry,

@@ -51,6 +51,7 @@ import numpy as np
 import os
 import os.path as osp
 import yaml
+from matplotlib import colors as mcolors
 
 from detectron.utils.collections import AttrDict
 from detectron.utils.io import cache_url
@@ -973,13 +974,6 @@ __C.EXPECTED_RESULTS_EMAIL = b''
 # specified by DOWNLOAD_CACHE
 __C.DOWNLOAD_CACHE = b'/home/max/Detectron_output/detectron-download-cache'
 
-# ---------------------------------------------------------------------------- #
-# CUSTOM DATAoptions
-# ---------------------------------------------------------------------------- #
-
-__C.CUSTOM_DATA = AttrDict()
-# flag to force testing also on test set of custom datasets
-__C.CUSTOM_DATA.FORCE_TEST = False
 
 # ---------------------------------------------------------------------------- #
 # Cluster options
@@ -988,6 +982,47 @@ __C.CLUSTER = AttrDict()
 
 # Flag to indicate if the code is running in a cluster environment
 __C.CLUSTER.ON_CLUSTER = False
+
+# ---------------------------------------------------------------------------- #
+# CUSTOM DATAoptions
+# ---------------------------------------------------------------------------- #
+
+__C.CUSTOM_DATA = AttrDict()
+# flag to force testing also on test set of custom datasets
+__C.CUSTOM_DATA.FORCE_TEST = False
+
+
+# ---------------------------------------------------------------------------- #
+# Options for visualization of Detection, GT-Samples, ...
+# ---------------------------------------------------------------------------- #
+__C.VIS = AttrDict()
+__C.VIS.ONLY_DETS = False # only visualize detections
+__C.VIS.GT_COLOR = 'cyan' # false negative or ground-truth value
+__C.VIS.DT_COLOR = 'lime' # true positive
+__C.VIS.FP_COLOR = 'red' # false positive
+
+# booleans for showing class labels of corresponding boxes
+__C.VIS.GT_SHOW_CLASS = False
+__C.VIS.DT_SHOW_CLASS = False
+__C.VIS.FP_SHOW_CLASS = True
+__C.VIS.FP_SHOW_CORRECT_CLASS = True
+
+__C.VIS.GT_SHOW_ALL = False # always show corresponding gt-boxes if True
+
+__C.VIS.BOX = AttrDict()
+__C.VIS.LABEL = AttrDict()
+__C.VIS.BOX.LINEWIDTH = 1.5
+__C.VIS.BOX.ALPHA = 1.0
+__C.VIS.LABEL.FONTSIZE = 6
+__C.VIS.LABEL.FAMILY = 'serif'
+__C.VIS.LABEL.WEIGHT = 'bold'
+__C.VIS.LABEL.ALPHA = 0.8
+__C.VIS.LABEL.PAD = 1
+__C.VIS.LABEL.GT_TEXTCOLOR = 'black'
+__C.VIS.LABEL.DT_TEXTCOLOR = 'black'
+__C.VIS.LABEL.FP_TEXTCOLOR = 'black'
+
+
 
 
 # ---------------------------------------------------------------------------- #

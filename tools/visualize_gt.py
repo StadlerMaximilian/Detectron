@@ -9,8 +9,9 @@ import detectron.utils.env as envu
 # Must happen before importing matplotlib
 envu.set_up_matplotlib()
 import matplotlib.pyplot as plt
-from detectron.pycocotools.coco import COCO
 
+from detectron.pycocotools.coco import COCO
+from detectron.core.config import cfg
 
 plt.rcParams['pdf.fonttype'] = 42  # For editing in Adobe Illustrator
 
@@ -97,7 +98,7 @@ def anns_to_boxes(anns):
 
 
 def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
-                           dpi=200, box_alpha=0.0, show_class=False, ext='png'):
+                           dpi=200, ext='png'):
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -119,20 +120,20 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
-                          fill=False, edgecolor='#0cff0c',
-                          linewidth=1, alpha=box_alpha))
+                          fill=False, edgecolor=cfg.VIS.GT_COLOR,
+                          linewidth=cfg.VIS.BOX.LINEWIDTH, alpha=cfg.VIS.BOX.ALPHA))
 
         # do not plot not matched detections
         # if gt-boxes drawn: show_classes always for wrong (red) detections
-        if show_class:
+        if cfg.VIS.GT_SHOW_CLASS:
             ax.text(
                 bbox[0] + 1, bbox[1] - 6,
                 category_id_to_name(cats, class_id),
-                fontsize=6,
-                family='serif', weight='bold',
+                fontsize=cfg.VIS.LABEL.FONTSIZE,
+                family=cfg.VIS.LABEL.FAMILY, weight=cfg.VIS.LABEL.WEIGHT,
                 bbox=dict(
-                    facecolor='#0cff0c', alpha=0.8, pad=1, edgecolor='none'),
-                color='black')
+                    facecolor=cfg.VIS.GT_COLOR, alpha=cfg.VIS.LABEL.ALPHA, pad=cfg.VIS.LABEL.PAD, edgecolor='none'),
+                color=cfg.VIS.LABEL.GT_TEXTCOLOR)
 
     output_name = os.path.basename(img_name) + '.' + ext
     fig.savefig(os.path.join(output_dir, '{}'.format(output_name)), dpi=dpi)
@@ -178,8 +179,7 @@ def main():
         anns = coco.loadAnns(annIds)
         boxes = anns_to_boxes(anns)
 
-        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats, box_alpha=1.0,
-                               show_class=True, ext=args.ext)
+        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats, ext=args.ext)
 
 
 if __name__ == '__main__':
