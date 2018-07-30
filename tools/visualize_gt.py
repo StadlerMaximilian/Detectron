@@ -66,6 +66,14 @@ def parse_args():
     )
 
     parser.add_argument(
+        '--show_label',
+        dest='show_label',
+        type=bool,
+        help='boolean for showing label texts',
+        default=False
+    )
+
+    parser.add_argument(
         '--ext',
         dest='ext',
         type=str,
@@ -98,7 +106,7 @@ def anns_to_boxes(anns):
 
 
 def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
-                           dpi=200, ext='png'):
+                           dpi=200, ext='png', show_cls=False):
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -125,7 +133,7 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
 
         # do not plot not matched detections
         # if gt-boxes drawn: show_classes always for wrong (red) detections
-        if cfg.VIS.GT_SHOW_CLASS:
+        if cfg.VIS.GT_SHOW_CLASS or show_cls:
             ax.text(
                 bbox[0] + 1, bbox[1] - 6,
                 category_id_to_name(cats, class_id),
@@ -179,7 +187,8 @@ def main():
         anns = coco.loadAnns(annIds)
         boxes = anns_to_boxes(anns)
 
-        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats, ext=args.ext)
+        visualize_one_gt_image(im, im_name, args.output_dir, boxes, coco.cats,
+                               ext=args.ext, show_cls=args.show_label)
 
 
 if __name__ == '__main__':

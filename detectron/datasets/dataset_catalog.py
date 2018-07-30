@@ -246,6 +246,138 @@ _DATASETS = {
         _ANN_FN:
             _DATA_DIR + '/kitti/annotations/kitti_test.json'
     },
+    'kitti_trainval_ignore': {
+        _IM_DIR:
+            _DATA_DIR + '/kitti/training/image_2',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/kitti_train_ignore.json'
+    },
+    'kitti_test_ignore': {
+        _IM_DIR:
+            _DATA_DIR + '/kitti/training/image_2',
+        _ANN_FN:
+            _DATA_DIR + '/kitti/annotations/kitti_test_ignore.json'
+    },
+    'kitti_trainval_ignore_complete': {
+        _IM_DIR:
+            _DATA_DIR + '/kitti/training/image_2',
+        _ANN_FN:
+            _DATA_DIR + '/tt100k/annotations/kitti_train_ignore_complete.json'
+    },
+    'kitti_test_ignore_complete': {
+        _IM_DIR:
+            _DATA_DIR + '/kitti/training/image_2',
+        _ANN_FN:
+            _DATA_DIR + '/kitti/annotations/kitti_test_ignore_complete.json'
+    },
+    'vkitti_new_clone_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_clone_train.json'
+    },
+    'vkitti_new_clone_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_clone_test.json'
+    },
+    'vkitti_new_clone_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_clone_all.json'
+    },
+    'vkitti_new_rain_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_rain_train.json'
+    },
+    'vkitti_new_rain_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_rain_test.json'
+    },
+    'vkitti_new_rain_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_rain_all.json'
+    },
+    'vkitti_new_morning_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_morning_train.json'
+    },
+    'vkitti_new_morning_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_morning_test.json'
+    },
+    'vkitti_new_morning_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_morning_all.json'
+    },
+    'vkitti_new_fog_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_fog_train.json'
+    },
+    'vkitti_new_fog_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_fog_test.json'
+    },
+    'vkitti_new_fog_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_fog_all.json'
+    },
+    'vkitti_new_overcast_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_overcast_train.json'
+    },
+    'vkitti_new_overcast_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_overcast_test.json'
+    },
+    'vkitti_new_overcast_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_overcast_all.json'
+    },
+    'vkitti_new_sunset_trainval': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_sunset_train.json'
+    },
+    'vkitti_new_sunset_test': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_sunset_test.json'
+    },
+    'vkitti_new_sunset_all': {
+        _IM_DIR:
+            _DATA_DIR + '/vkitti/Images',
+        _ANN_FN:
+            _DATA_DIR + '/vkitti/annotations/vkitti_new_sunset_all.json'
+    },
     'vkitti_clone_trainval': {
         _IM_DIR:
             _DATA_DIR + '/vkitti/Images',
@@ -390,7 +522,6 @@ _DATASETS = {
         _ANN_FN:
             _DATA_DIR + '/caltech_pedestrian/annotations/caltech_new_test.json'
     }
-
 }
 
 

@@ -124,10 +124,29 @@ class CocoVkittiConversion(CocoConversion):
 
                 print("..." + setup + "_" + mode + ": converted {} images".format(img_id_counter))
 
-                dataset_dict = self.create_coco_dataset_dict(images, annotations)
+                # run through annotations and check which old_kitti categories do not appear
+                removed = []
+                for cat_id, cat in enumerate(categories):
+                    counter = 0
+                    for anno in annotations:
+                        if anno['category_id'] == cat_id:
+                            counter += 1
+                    # if no appearance: remove category
+                    # save removed categories
+                    if counter == 0:
+                        categories_coco = [x for x in categories_coco if x['name'] == cat]
+                        removed.append(cat)
+
+                with open(self.anno_dir + '/removed_categories.txt', 'w') as fp:
+                    for cat in removed:
+                        fp.write("{},".format(cat))
+                    fp.write("\n")
+
+                dataset_dict = self.create_coco_dataset_dict(images, annotations, categories=categories_coco)
                 with open(self.anno_dir + '/vkitti_' + setup + '_' + mode + '.json', 'w') as fp:
                     json.dump(dataset_dict, fp)
                     self.annotation_files.append(self.anno_dir + '/vkitti_' + setup + '_' + mode + '.json')
+
                 dataset_dict = self.create_coco_dataset_dict(images, annotations_new, categories=categories_coco_new)
                 with open(self.anno_dir + '/vkitti_new_' + setup + '_' + mode + '.json', 'w') as fp:
                     json.dump(dataset_dict, fp)
