@@ -127,7 +127,7 @@ class CocoVkittiConversion(CocoConversion):
                 # run through annotations and check which old_kitti categories do not appear
                 removed = []
                 categories_coco_removed = [x for x in categories_coco]
-                for cat in enumerate(categories_coco):
+                for cat in categories_coco:
                     cat_id = cat['id']
                     cat_name = cat['name']
                     counter = 0
@@ -137,7 +137,7 @@ class CocoVkittiConversion(CocoConversion):
                     # if no appearance: remove category
                     # save removed categories
                     if counter == 0:
-                        categories_coco_removed = [x for x in categories_coco_removed if x['name'] == cat_name]
+                        categories_coco_removed = [x for x in categories_coco_removed if x['id'] != cat_id]
                         removed.append(cat_name)
 
                 categories_coco = [x for x in categories_coco_removed]
@@ -204,7 +204,6 @@ class CocoVkittiConversion(CocoConversion):
                     category_new = row[2]
                     x1, y1, x2, y2 = map(float, row[6:10])
                     category = row[-4]
-                    print(category)
                     width = x2 - x1
                     height = y2 - y1
                     area = height * width
