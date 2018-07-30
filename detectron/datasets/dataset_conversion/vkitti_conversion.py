@@ -91,11 +91,12 @@ class CocoVkittiConversion(CocoConversion):
                 img_id_counter = 0
                 images = []
                 imgs_frames = []
-
+                imgs_frames_per_world = {}
                 # create images list by reading images from imgs_dict of current mode and all worlds
                 for world in world_list:
                     imgs_split = [img.split("_") for img in imgs]
                     imgs_frames = [int(img[1]) for img in imgs_split if int(img[0]) == world]
+                    imgs_frames_per_world[world] = imgs_frames
                     for frame in imgs_frames:
                         file_name = "{:04d}_{}_{:05}.png".format(world, setup, frame)
                         img_path = self.data_dir + "/Images/" + file_name
@@ -116,7 +117,7 @@ class CocoVkittiConversion(CocoConversion):
                                                         annotations,
                                                         annotations_new,
                                                         images,
-                                                        imgs_frames,
+                                                        imgs_frames_per_world[world],
                                                         categories_coco,
                                                         categories_coco_new)
 
@@ -140,12 +141,11 @@ class CocoVkittiConversion(CocoConversion):
                         categories_coco_removed = [x for x in categories_coco_removed if x['id'] != cat_id]
                         removed.append(cat_name)
 
+                print("Removed categories: {}".format(removed))
                 categories_coco = [x for x in categories_coco_removed]
 
                 with open(self.anno_dir + '/removed_categories.txt', 'w') as fp:
-                    for cat in removed:
-                        fp.write("{},".format(cat))
-                    fp.write("\n")
+                    fp.write("{}\n".format(removed.join(",")))
 
                 dataset_dict = self.create_coco_dataset_dict(images, annotations, categories=categories_coco)
                 with open(self.anno_dir + '/vkitti_' + setup + '_' + mode + '.json', 'w') as fp:
@@ -165,7 +165,7 @@ class CocoVkittiConversion(CocoConversion):
         """
         images = glob.glob(self.data_dir + "/Images/*_clone_*") # only for clone, but rest is equivalent
         images = [os.path.split(img)[-1] for img in images] # get only file_name
-        images = [img.split('_')[0] + '_'  + img.split('_')[-1].split('.')[0] for img in images] # remove setup
+        images = [img.split('_')[0] + '_' + img.split('_')[-1].split('.')[0] for img in images] # remove setup
         num_img = len(images)
         num_test_img = int(num_img * part_test)
         test_imgs = random.sample(images, num_test_img)
