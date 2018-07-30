@@ -67,8 +67,8 @@ class CocoVkittiConversion(CocoConversion):
         self.append_coco_license()  # empty license
 
         # categories
-        categories = ["Car", "Van", "DontCare"]
-        categories_new = ["Car", "Van"]
+        categories = ["Car", "Van"]
+        categories_new = ["Car", "Van", "DontCare"]
         categories_coco = []
         categories_coco_new = []
         for cat_idx, cat in enumerate(categories, 1):
