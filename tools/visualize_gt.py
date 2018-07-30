@@ -99,9 +99,12 @@ def category_id_to_name(cats, id):
 
 
 def anns_to_boxes(anns):
-    boxes_xyhwh = [ann['bbox'] for ann in anns]
-    classes = [ann['category_id'] for ann in anns]
-    boxes_list = [xywh_to_xyxy(box)+[classes[ind]]for ind, box in enumerate(boxes_xyhwh)]
+    if len(anns) == 0:
+        boxes_list=[[0,0,0,0],[-1]]
+    else:
+        boxes_xyhwh = [ann['bbox'] for ann in anns]
+        classes = [ann['category_id'] for ann in anns]
+        boxes_list = [xywh_to_xyxy(box)+[classes[ind]]for ind, box in enumerate(boxes_xyhwh)]
     return np.array(boxes_list)
 
 
@@ -117,15 +120,15 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
     ax.axis('off')
     fig.add_axes(ax)
     ax.imshow(img)
-    
-    if len(boxes) == 4:
-        # Display in largest to smallest order to reduce occlusion
-        areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-        sorted_inds = np.argsort(-areas)
 
-        for i in sorted_inds:
-            bbox = boxes[i, :4]
-            class_id = boxes[i, -1]
+    # Display in largest to smallest order to reduce occlusion
+    areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
+    sorted_inds = np.argsort(-areas)
+
+    for i in sorted_inds:
+        bbox = boxes[i, :4]
+        class_id = boxes[i, -1]
+        if class_id != -1:
             ax.add_patch(
                 plt.Rectangle((bbox[0], bbox[1]),
                               bbox[2] - bbox[0],
