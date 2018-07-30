@@ -117,31 +117,33 @@ def visualize_one_gt_image(img, img_name, output_dir, boxes, cats,
     ax.axis('off')
     fig.add_axes(ax)
     ax.imshow(img)
-    # Display in largest to smallest order to reduce occlusion
-    areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-    sorted_inds = np.argsort(-areas)
+    
+    if len(boxes) == 4:
+        # Display in largest to smallest order to reduce occlusion
+        areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
+        sorted_inds = np.argsort(-areas)
 
-    for i in sorted_inds:
-        bbox = boxes[i, :4]
-        class_id = boxes[i, -1]
-        ax.add_patch(
-            plt.Rectangle((bbox[0], bbox[1]),
-                          bbox[2] - bbox[0],
-                          bbox[3] - bbox[1],
-                          fill=False, edgecolor=cfg.VIS.GT_COLOR,
-                          linewidth=cfg.VIS.BOX.LINEWIDTH, alpha=cfg.VIS.BOX.ALPHA))
+        for i in sorted_inds:
+            bbox = boxes[i, :4]
+            class_id = boxes[i, -1]
+            ax.add_patch(
+                plt.Rectangle((bbox[0], bbox[1]),
+                              bbox[2] - bbox[0],
+                              bbox[3] - bbox[1],
+                              fill=False, edgecolor=cfg.VIS.GT_COLOR,
+                              linewidth=cfg.VIS.BOX.LINEWIDTH, alpha=cfg.VIS.BOX.ALPHA))
 
-        # do not plot not matched detections
-        # if gt-boxes drawn: show_classes always for wrong (red) detections
-        if cfg.VIS.GT_SHOW_CLASS or show_cls:
-            ax.text(
-                bbox[0] + 1, bbox[1] - 6,
-                category_id_to_name(cats, class_id),
-                fontsize=cfg.VIS.LABEL.FONTSIZE,
-                family=cfg.VIS.LABEL.FAMILY, weight=cfg.VIS.LABEL.WEIGHT,
-                bbox=dict(
-                    facecolor=cfg.VIS.GT_COLOR, alpha=cfg.VIS.LABEL.ALPHA, pad=cfg.VIS.LABEL.PAD, edgecolor='none'),
-                color=cfg.VIS.LABEL.GT_TEXTCOLOR)
+            # do not plot not matched detections
+            # if gt-boxes drawn: show_classes always for wrong (red) detections
+            if cfg.VIS.GT_SHOW_CLASS or show_cls:
+                ax.text(
+                    bbox[0] + 1, bbox[1] - 6,
+                    category_id_to_name(cats, class_id),
+                    fontsize=cfg.VIS.LABEL.FONTSIZE,
+                    family=cfg.VIS.LABEL.FAMILY, weight=cfg.VIS.LABEL.WEIGHT,
+                    bbox=dict(
+                        facecolor=cfg.VIS.GT_COLOR, alpha=cfg.VIS.LABEL.ALPHA, pad=cfg.VIS.LABEL.PAD, edgecolor='none'),
+                    color=cfg.VIS.LABEL.GT_TEXTCOLOR)
 
     output_name = os.path.basename(img_name) + '.' + ext
     fig.savefig(os.path.join(output_dir, '{}'.format(output_name)), dpi=dpi)
