@@ -67,10 +67,8 @@ class CocoVkittiConversion(CocoConversion):
         self.append_coco_license()  # empty license
 
         # categories
-        categories = ["Car", "Van", "Truck", "Pedestrian",
-                      "Person_sitting", "Cyclist", "Tram",
-                      "Misc", "DontCare"]
-        categories_new = ["Car", "DontCare"]
+        categories = ["Car", "Van", "DontCare"]
+        categories_new = ["Car", "Van"]
         categories_coco = []
         categories_coco_new = []
         for cat_idx, cat in enumerate(categories, 1):
@@ -90,7 +88,6 @@ class CocoVkittiConversion(CocoConversion):
 
                 img_id_counter = 0
                 images = []
-                imgs_frames = []
                 imgs_frames_per_world = {}
                 # create images list by reading images from imgs_dict of current mode and all worlds
                 for world in world_list:
@@ -124,28 +121,6 @@ class CocoVkittiConversion(CocoConversion):
                     ann_id_counter = ann_id
 
                 print("..." + setup + "_" + mode + ": converted {} images".format(img_id_counter))
-
-                # run through annotations and check which old_kitti categories do not appear
-                removed = []
-                categories_coco_removed = [x for x in categories_coco]
-                for cat in categories_coco:
-                    cat_id = cat['id']
-                    cat_name = cat['name']
-                    counter = 0
-                    for anno in annotations:
-                        if anno['category_id'] == cat_id:
-                            counter += 1
-                    # if no appearance: remove category
-                    # save removed categories
-                    if counter == 0:
-                        categories_coco_removed = [x for x in categories_coco_removed if x['id'] != cat_id]
-                        removed.append(cat_name)
-
-                print("Removed categories: {}".format(removed))
-                categories_coco = [x for x in categories_coco_removed]
-
-                with open(self.anno_dir + '/removed_categories.txt', 'w') as fp:
-                    fp.write("{}\n".format(removed.join(",")))
 
                 dataset_dict = self.create_coco_dataset_dict(images, annotations, categories=categories_coco)
                 with open(self.anno_dir + '/vkitti_' + setup + '_' + mode + '.json', 'w') as fp:
