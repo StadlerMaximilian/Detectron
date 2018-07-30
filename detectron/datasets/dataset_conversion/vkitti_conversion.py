@@ -126,7 +126,10 @@ class CocoVkittiConversion(CocoConversion):
 
                 # run through annotations and check which old_kitti categories do not appear
                 removed = []
-                for cat_id, cat in enumerate(categories):
+                categories_coco_removed = [x for x in categories_coco]
+                for cat in enumerate(categories_coco):
+                    cat_id = cat['id']
+                    cat_name = cat['name']
                     counter = 0
                     for anno in annotations:
                         if anno['category_id'] == cat_id:
@@ -134,8 +137,10 @@ class CocoVkittiConversion(CocoConversion):
                     # if no appearance: remove category
                     # save removed categories
                     if counter == 0:
-                        categories_coco = [x for x in categories_coco if x['name'] == cat]
-                        removed.append(cat)
+                        categories_coco_removed = [x for x in categories_coco_removed if x['name'] == cat_name]
+                        removed.append(cat_name)
+
+                categories_coco = [x for x in categories_coco_removed]
 
                 with open(self.anno_dir + '/removed_categories.txt', 'w') as fp:
                     for cat in removed:
@@ -199,6 +204,7 @@ class CocoVkittiConversion(CocoConversion):
                     category_new = row[2]
                     x1, y1, x2, y2 = map(float, row[6:10])
                     category = row[-4]
+                    print(category)
                     width = x2 - x1
                     height = y2 - y1
                     area = height * width
