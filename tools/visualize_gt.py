@@ -100,7 +100,7 @@ def category_id_to_name(cats, id):
 
 def anns_to_boxes(anns):
     if len(anns) == 0:
-        boxes_list=[[0,0,0,0],[-1]]
+        boxes_list=[[0,0,0,0,-1]]
     else:
         boxes_xyhwh = [ann['bbox'] for ann in anns]
         classes = [ann['category_id'] for ann in anns]
