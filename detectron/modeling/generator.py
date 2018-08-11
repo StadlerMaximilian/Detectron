@@ -127,7 +127,7 @@ def generator_transformation(model,
                              group=1):
     """ represents the convolutional transforation within one residual block"""
 
-    blob = model.ConvAffine(blob_in,
+    blob = model.Conv(blob_in,
                             prefix + '_branch2a',
                             dim_in,
                             dim_in,
@@ -137,6 +137,25 @@ def generator_transformation(model,
                             group=group,
                             inplace=True
                             )
+
+    blob = model.BatchNormalization(blob,
+                                    input_shape
+
+    output_schema
+
+    momentum
+
+    order
+
+    scale
+
+    bias
+
+    rm
+
+    riv
+
+    )
 
     blob = model.Relu(blob, blob)
 
